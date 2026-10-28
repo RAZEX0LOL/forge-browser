@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /forge/
+Sitemap: https://razex.shop/forge/sitemap.xml

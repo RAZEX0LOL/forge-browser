@@ -76,7 +76,9 @@ class SiteTests(unittest.TestCase):
 
     def test_nginx_only_adds_scoped_static_routes_and_security_headers(self):
         config = (SITE / 'nginx-location.conf').read_text()
-        self.assertEqual(len(re.findall(r'^location ', config, re.M)), 3)
+        self.assertEqual(len(re.findall(r'^location ', config, re.M)), 4)
+        self.assertIn('location = /robots.txt', config)
+        self.assertIn('Sitemap: https://razex.shop/forge/sitemap.xml', (SITE / 'robots.txt').read_text())
         self.assertIn("script-src 'self'", config)
         self.assertIn("connect-src 'none'", config)
         self.assertIn('X-Content-Type-Options "nosniff"', config)

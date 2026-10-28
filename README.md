@@ -13,6 +13,9 @@ built-in Russian localization alongside English fallback.
 automatic security-update service. Do not treat this snapshot as a maintained,
 secure replacement for an up-to-date browser.
 
+**[Forge website and downloads](https://razex.shop/forge/)** — platform selection,
+notarized macOS ZIPs, checksums and explicit development/mobile limitations.
+
 ## Platform status
 
 [Download the multiplatform development prerelease](https://github.com/RAZEX0LOL/forge-browser/releases/tag/v0.1.0-dev.20261028-multiplatform).

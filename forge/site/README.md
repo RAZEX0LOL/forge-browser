@@ -29,7 +29,9 @@ profiles, credentials, `.p8`, IPA/provisioning data or signing logs to this site
 
 The existing Nginx `razex.shop` HTTPS server includes `nginx-location.conf` via
 `/etc/nginx/snippets/forge-site.conf`. This only adds `/forge` routes; Matrix
-well-known routes and existing sites stay untouched. No DNS, firewall, TLS
+well-known routes and existing sites stay untouched. The previously undefined
+domain-level `/robots.txt` gets a valid policy pointing to the Forge sitemap.
+No DNS, firewall, TLS
 verification, OS trust settings or app services need to be changed.
 
 ```
@@ -37,6 +39,7 @@ verification, OS trust settings or app services need to be changed.
   current -> releases/<release>/
   releases/<release>/forge/
     index.html, styles.css, site.js, privacy.html, downloads.json, SHA256SUMS
+    robots.txt, sitemap.xml
     assets/
     downloads -> /var/www/forge-site/downloads/
   downloads/<immutable notarized ZIPs>
@@ -46,6 +49,8 @@ Deploy only the listed static files and assets, not this README or Nginx config.
 Verify package hashes before exposing them. Back up the existing Nginx config
 before adding the single include, run `nginx -t`, then reload rather than restart.
 Activate a fully verified release with an atomic `current` symlink replacement.
+After reloading Nginx, wait for a content/hash readiness check before judging the
+new route: a successful reload signal can precede worker configuration activation.
 Rollback means pointing that symlink to the previous retained release; for an
 initial deployment, remove only the newly added include and reload after testing.
 Keep backups and pre-existing files; do not delete unrelated server content.
