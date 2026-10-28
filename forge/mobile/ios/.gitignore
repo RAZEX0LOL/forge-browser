@@ -1,0 +1,5 @@
+build/
+*.xcodeproj/
+*.zip
+*.ipa
+*.xcarchive/

@@ -1,0 +1,52 @@
+name: Forge mobile prototypes
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: forge/mobile/android
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: forge/mobile
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - run: gradle --no-daemon :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Forge-android-prototype-debug
+          path: forge/mobile/android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 7
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: forge/mobile/ios
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: forge/mobile
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - run: xcodebuild -project ForgeMobile.xcodeproj -scheme ForgeMobile -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - run: ditto -c -k --keepParent build/Build/Products/Debug-iphonesimulator/ForgeMobile.app Forge-ios-simulator-prototype.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Forge-ios-simulator-prototype
+          path: forge/mobile/ios/Forge-ios-simulator-prototype.zip
+          if-no-files-found: error
+          retention-days: 7

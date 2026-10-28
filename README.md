@@ -18,15 +18,16 @@ secure replacement for an up-to-date browser.
 | Platform | Actual status |
 | --- | --- |
 | macOS Apple Silicon | Locally built and integration-tested; ad-hoc signed, not notarized |
-| macOS Intel | Planned; no Forge build or runtime validation yet |
-| Windows x64 | Planned; no Forge installer or runtime validation yet |
-| Linux x64 | Planned; no Forge package or runtime validation yet |
+| macOS Intel | Native CI build workflow added; success/runtime validation not yet established |
+| Windows x64 | Native CI build workflow added; no verified installer yet |
+| Linux x64 | Native CI build workflow added; no verified package yet |
 | Linux ARM64 / Windows ARM64 | Planned; no Forge build or runtime validation yet |
-| Android | Separate mobile implementation required; no Forge APK/AAB yet |
-| iOS / iPadOS | Separate mobile implementation and Apple eligibility review required; no Forge IPA yet |
+| Android | New minimal GeckoView prototype; build/device validation pending, no production APK/AAB |
+| iOS / iPadOS | New WebKit prototype compiles for Simulator arm64/x86_64; no signed device IPA |
 
 No placeholder images or upstream Firefox binaries are presented as Forge builds.
-Android and iOS are goals, not existing ports of this desktop interface.
+Android and iOS are separate prototypes, not ports of this desktop interface.
+See [`forge/mobile/README.md`](forge/mobile/README.md) for their limited scope.
 
 ## Source layout and builds
 

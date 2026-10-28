@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Forge Прототип</string>
+    <string name="address">HTTPS-адрес или поиск</string>
+    <string name="go">Перейти</string>
+    <string name="back">Назад</string>
+    <string name="forward">Вперёд</string>
+    <string name="reload">Обновить</string>
+    <string name="prototype">Прототип GeckoView — только HTTPS. Не настольный Forge.</string>
+    <string name="blocked">Адрес или переход не поддерживается. Разрешён только HTTPS.</string>
+    <string name="load_failed">Страница не загрузилась. Исключение для сертификата не добавлено.</string>
+    <string name="loading">Загрузка…</string>
+    <string name="ready">Страница загружена</string>
+</resources>

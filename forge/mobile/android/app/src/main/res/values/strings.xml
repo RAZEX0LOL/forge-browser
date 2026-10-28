@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Forge Prototype</string>
+    <string name="address">HTTPS address or search</string>
+    <string name="go">Go</string>
+    <string name="back">Back</string>
+    <string name="forward">Forward</string>
+    <string name="reload">Reload</string>
+    <string name="prototype">GeckoView prototype — HTTPS only. Not desktop Forge.</string>
+    <string name="blocked">Unsupported address or navigation. Only HTTPS is enabled.</string>
+    <string name="load_failed">Page could not be loaded. No certificate exception was added.</string>
+    <string name="loading">Loading…</string>
+    <string name="ready">Page loaded</string>
+</resources>
