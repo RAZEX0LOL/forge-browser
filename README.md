@@ -54,7 +54,8 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 ## License and attribution
 
 Original Mozilla and third-party code retains its existing licenses: see
-[`LICENSE`](LICENSE) and [`toolkit/content/license.html`](toolkit/content/license.html).
+[`LICENSE`](LICENSE), the [license template](toolkit/content/license.html.mako)
+and [license texts](toolkit/content/licenses/).
 Forge additions are available under MPL-2.0; see [`forge/LICENSE`](forge/LICENSE).
 No rights to Mozilla's trademarks are granted. The name Forge is provisional;
 trademark clearance has not been completed.
