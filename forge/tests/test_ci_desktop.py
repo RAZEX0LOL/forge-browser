@@ -3,6 +3,7 @@ import struct
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from ci_desktop import verify_architecture
@@ -34,3 +35,8 @@ class DesktopArchitectureTests(unittest.TestCase):
         self.binary.write_bytes(b'not an executable'.ljust(64,b'\0'))
         for system in ('linux','win32'):
             with self.assertRaises(ValueError):verify_architecture(self.binary,system,'x86_64')
+
+    def test_macho_verifier_uses_input_before_variadic_architecture_flags(self):
+        with patch('ci_desktop.run') as run:
+            verify_architecture(self.binary,'darwin','arm64')
+        run.assert_called_once_with('lipo',self.binary,'-verify_arch','arm64')

@@ -28,7 +28,7 @@ def run(*command,env=None):
 def verify_architecture(binary,system,machine):
     arm=machine.lower() in ('arm64','aarch64')
     if system=='darwin':
-        run('lipo','-verify_arch','arm64' if arm else 'x86_64',binary)
+        run('lipo',binary,'-verify_arch','arm64' if arm else 'x86_64')
         return
     with binary.open('rb') as file:
         header=file.read(64)
