@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-28",
+  "repository": "https://github.com/RAZEX0LOL/forge-browser",
+  "release": "v0.1.0-dev.20261028-multiplatform",
+  "status": "Development software. No supported automatic security-update service.",
+  "iosTestFlight": {"version": "0.1.0", "build": "2", "reviewStateAsOfDate": "WAITING_FOR_REVIEW", "publicLink": null},
+  "builds": [
+    {
+      "target": "macos-arm64",
+      "file": "Forge-development-20261028-macos-arm64-notarized.zip",
+      "url": "downloads/Forge-development-20261028-macos-arm64-notarized.zip",
+      "sha256": "c90f8d5e32e5ace6887a2a464c2f5078f7b7cc7cc1b485fad231d0f3d611d776",
+      "bytes": 163096871,
+      "sourceCommit": "1aa336311853883baae3cb4afe0fb58806ead00d",
+      "signingToolCommit": "ab267d2f042",
+      "signing": "Developer ID Application, Hardened Runtime, Apple notarized, ticket stapled",
+      "notarySubmission": "e63b6002-2dd7-4bef-8c1e-d169bd5b7ec5",
+      "signedBrowserChecks": 285,
+      "nativeRussianLocalePackaged": true
+    },
+    {
+      "target": "macos-intel",
+      "file": "Forge-development-20261028-macos-intel-notarized.zip",
+      "url": "downloads/Forge-development-20261028-macos-intel-notarized.zip",
+      "sha256": "706c6adbc32aee8fe3320014a56c860b3853adbe02bb1dde297c291557b32097",
+      "bytes": 294242471,
+      "sourceCommit": "c07e3c1ea6b202121228ce85c6b519a57b73b65d",
+      "signingToolCommit": "ab267d2f042",
+      "signing": "Developer ID Application, Hardened Runtime, Apple notarized, ticket stapled",
+      "notarySubmission": "218d56d3-caf7-4d19-9d44-7e1821cee4d8",
+      "signedBrowserRuntimeValidated": false,
+      "originalNativeCIChecks": 270,
+      "limitation": "Post-signing native Intel retest required. Both signed and original ad-hoc builds timed out connecting to Marionette through Rosetta.",
+      "nativeRussianLocalePackaged": false
+    },
+    {
+      "target": "windows-x64",
+      "file": "Forge-development-windows-x86_64.zip",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-development-windows-x86_64.zip",
+      "sha256": "92f4a25e68153d51b68d893c7221727fcec8aa0466d4fe508168e7bc13ea11ba",
+      "bytes": 158171197,
+      "sourceCommit": "e679a215d72d423e82c1c4690423c79281ddfb04",
+      "browserChecks": 260,
+      "signing": "No Forge publisher signature",
+      "launcher": "Forge.cmd"
+    },
+    {
+      "target": "windows-arm64",
+      "file": "Forge-development-windows-arm64.zip",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-development-windows-arm64.zip",
+      "sha256": "6411ee2abebce2d85e0c704836883eeb2a02b1d0434d0c447d0219759ea9ec79",
+      "bytes": 146450651,
+      "sourceCommit": "ffe5545de7457fcb59f5c3505f38d68b076017e9",
+      "browserChecks": 260,
+      "signing": "No Forge publisher signature",
+      "launcher": "Forge.cmd"
+    },
+    {
+      "target": "linux-x64",
+      "file": "Forge-development-linux-x86_64.tar.xz",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-development-linux-x86_64.tar.xz",
+      "sha256": "80f146e42b2884a15cc6df37b3ceb4d376e1b1e68052a8ba381c7b0115607c4b",
+      "bytes": 151325884,
+      "sourceCommit": "c07e3c1ea6b202121228ce85c6b519a57b73b65d",
+      "browserChecks": 260,
+      "launcher": "./forge"
+    },
+    {
+      "target": "linux-arm64",
+      "file": "Forge-development-linux-arm64.tar.xz",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-development-linux-arm64.tar.xz",
+      "sha256": "22d781ea4c27385b74d8a5e0e4e686d0043c36ef3f0a9e9a4715b31931b9a747",
+      "bytes": 146880052,
+      "sourceCommit": "ffe5545de7457fcb59f5c3505f38d68b076017e9",
+      "browserChecks": 260,
+      "launcher": "./forge"
+    },
+    {
+      "target": "android-arm64-v8a",
+      "file": "Forge-android-prototype-arm64-v8a-debug.apk",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-android-prototype-arm64-v8a-debug.apk",
+      "sha256": "aa3854620114b439eb89226c8956d505b9ba9a9d696346f91f877a731e5aba35",
+      "bytes": 198824375,
+      "sourceCommit": "3590c57e4bf95b7b1249a848630855d0797f1358",
+      "engine": "GeckoView 159.0.20261022150525",
+      "signing": "Ephemeral debug identity",
+      "runtimeValidation": "Two native tests on Android x86_64 emulator; physical ARM devices untested"
+    },
+    {
+      "target": "android-armeabi-v7a",
+      "file": "Forge-android-prototype-armeabi-v7a-debug.apk",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-android-prototype-armeabi-v7a-debug.apk",
+      "sha256": "6272a8604435f45243594edb0ca901335484bb3d9a1210f9df55b59cd2268104",
+      "bytes": 159629449,
+      "sourceCommit": "3590c57e4bf95b7b1249a848630855d0797f1358",
+      "engine": "GeckoView 159.0.20261022150525",
+      "signing": "Ephemeral debug identity",
+      "runtimeValidation": "Two native tests on Android x86_64 emulator; physical ARM devices untested"
+    },
+    {
+      "target": "android-x86_64",
+      "file": "Forge-android-prototype-x86_64-debug.apk",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-android-prototype-x86_64-debug.apk",
+      "sha256": "2d89b0d38a218c16f63e14ce019db3f9b619c7dde0432a6cc2f5ff3dbe7d408c",
+      "bytes": 218418944,
+      "sourceCommit": "3590c57e4bf95b7b1249a848630855d0797f1358",
+      "engine": "GeckoView 159.0.20261022150525",
+      "signing": "Ephemeral debug identity",
+      "runtimeValidation": "Two native tests on Android x86_64 emulator"
+    },
+    {
+      "target": "ios-simulator",
+      "file": "Forge-ios-simulator-prototype.zip",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-ios-simulator-prototype.zip",
+      "sha256": "8a6ae68c3ed6a4e33200bff3d7dbc5848988846dd7ec3d33fa9a4f51a5eb3d4c",
+      "bytes": 5060169,
+      "sourceCommit": "3590c57e4bf95b7b1249a848630855d0797f1358",
+      "engine": "System WebKit",
+      "installableIPhoneIPA": false
+    },
+    {
+      "target": "ios-device-unsigned",
+      "file": "Forge-ios-device-unsigned.xcarchive.zip",
+      "url": "https://github.com/RAZEX0LOL/forge-browser/releases/download/v0.1.0-dev.20261028-multiplatform/Forge-ios-device-unsigned.xcarchive.zip",
+      "sha256": "7f423b9d46440cad77ec4bcb37342da0a8190591af311c352f5191df36ae0789",
+      "bytes": 530617,
+      "sourceCommit": "3590c57e4bf95b7b1249a848630855d0797f1358",
+      "engine": "System WebKit",
+      "installableIPhoneIPA": false,
+      "signing": "Unsigned device archive; requires Apple provisioning and signing"
+    }
+  ]
+}
