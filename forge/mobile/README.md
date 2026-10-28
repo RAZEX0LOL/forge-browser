@@ -20,7 +20,7 @@ test counts must not be applied to them.
 
 ## Android
 
-JDK 17, Android SDK 35, Gradle 8.11.1, Android Gradle Plugin 8.9.3.
+JDK 17, compile SDK 37 (target SDK 35), Gradle 9.3.1, Android Gradle Plugin 9.1.1.
 The engine is downloaded over HTTPS from Mozilla's Maven repository and is
 independently versioned from desktop Gecko. Its exact source and license notices
 are available from the same Maven coordinates (`-sources.jar`) and Mozilla.
