@@ -313,27 +313,34 @@ def run_audit_checks(client, results, passed):
     """)
     client.set_context('content')
     client.navigate('data:text/html,<title>Forge audit navigation A</title><h1>Page A</h1>')
+    client.set_context('chrome')
+    client.execute_script("window.__forgeAuditHistoryA=gBrowser.selectedBrowser.currentURI.spec;")
+    client.set_context('content')
     client.navigate('data:text/html,<title>Forge audit navigation B</title><h1>Page B</h1>')
     client.set_context('chrome')
+    client.execute_script("window.__forgeAuditHistoryB=gBrowser.selectedBrowser.currentURI.spec;")
     client.execute_script("document.getElementById('back-button').doCommand();")
-    client.set_context('content')
+    # Observe from browser chrome: a callback installed in page B is destroyed
+    # when Back replaces its document, causing a false timeout on slower hosts.
     check("Native Back button navigates the actual page history", """
         const done=arguments[arguments.length-1];let attempts=0;
         const timer=setInterval(()=>{
-            if(document.title==='Forge audit navigation A'){clearInterval(timer);done(true);}
-            else if(++attempts>80){clearInterval(timer);done(document.title);}
+            const browser=gBrowser.selectedBrowser;
+            if(browser.contentTitle==='Forge audit navigation A' && browser.currentURI.spec===__forgeAuditHistoryA){clearInterval(timer);done(true);}
+            else if(++attempts>200){clearInterval(timer);done({title:browser.contentTitle,uri:browser.currentURI.spec});}
         },25);
     """, True)
     client.set_context('chrome')
     client.execute_script("document.getElementById('forward-button').doCommand();")
-    client.set_context('content')
     check("Native Forward button navigates the actual page history", """
         const done=arguments[arguments.length-1];let attempts=0;
         const timer=setInterval(()=>{
-            if(document.title==='Forge audit navigation B'){clearInterval(timer);done(true);}
-            else if(++attempts>80){clearInterval(timer);done(document.title);}
+            const browser=gBrowser.selectedBrowser;
+            if(browser.contentTitle==='Forge audit navigation B' && browser.currentURI.spec===__forgeAuditHistoryB){clearInterval(timer);done(true);}
+            else if(++attempts>200){clearInterval(timer);done({title:browser.contentTitle,uri:browser.currentURI.spec});}
         },25);
     """, True)
+    client.execute_script("delete window.__forgeAuditHistoryA;delete window.__forgeAuditHistoryB;")
     client.set_context('chrome')
     main_window=client.current_chrome_window_handle
     for private in (False,True):

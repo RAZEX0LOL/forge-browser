@@ -34,7 +34,7 @@ final class NavigationPolicyTests: XCTestCase {
         field.text = "javascript:alert(1)"
         XCTAssertTrue(controller.textFieldShouldReturn(field))
         XCTAssertNil(web.url)
-        XCTAssertTrue(status.text?.contains("Unsupported") == true)
+        XCTAssertEqual(status.text, NSLocalizedString("Unsupported address. Only HTTPS is enabled.", comment: ""))
     }
 
     @MainActor

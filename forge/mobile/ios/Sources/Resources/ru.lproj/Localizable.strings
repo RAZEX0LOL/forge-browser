@@ -1,0 +1,13 @@
+"Go" = "Перейти";
+"Back" = "Назад";
+"Forward" = "Вперёд";
+"Reload" = "Обновить";
+"HTTPS address or search" = "HTTPS-адрес или поиск";
+"Address or search" = "Адрес или поиск";
+"WebKit prototype — HTTPS only. Not desktop Forge." = "Прототип WebKit — только HTTPS. Не настольный Forge.";
+"Unsupported address. Only HTTPS is enabled." = "Адрес не поддерживается. Разрешён только HTTPS.";
+"Unsupported navigation. No external app was opened." = "Переход не поддерживается. Внешнее приложение не открывалось.";
+"Loading…" = "Загрузка…";
+"Page loaded" = "Страница загружена";
+"Page could not be loaded. No certificate exception was added." = "Страница не загрузилась. Исключение для сертификата не добавлено.";
+"Page could not be loaded." = "Страница не загрузилась.";

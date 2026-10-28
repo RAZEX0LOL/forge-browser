@@ -1,0 +1,13 @@
+"Go" = "Go";
+"Back" = "Back";
+"Forward" = "Forward";
+"Reload" = "Reload";
+"HTTPS address or search" = "HTTPS address or search";
+"Address or search" = "Address or search";
+"WebKit prototype — HTTPS only. Not desktop Forge." = "WebKit prototype — HTTPS only. Not desktop Forge.";
+"Unsupported address. Only HTTPS is enabled." = "Unsupported address. Only HTTPS is enabled.";
+"Unsupported navigation. No external app was opened." = "Unsupported navigation. No external app was opened.";
+"Loading…" = "Loading…";
+"Page loaded" = "Page loaded";
+"Page could not be loaded. No certificate exception was added." = "Page could not be loaded. No certificate exception was added.";
+"Page could not be loaded." = "Page could not be loaded.";

@@ -11,10 +11,12 @@ final class BrowserController: UIViewController, WKNavigationDelegate, UITextFie
     private var back: UIButton!
     private var forward: UIButton!
 
+    private func text(_ key: String) -> String { NSLocalizedString(key, comment: "Forge mobile UI") }
+
     private func button(_ title: String, symbol: String, action: UIAction) -> UIButton {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: symbol), for: .normal)
-        button.accessibilityLabel = title
+        button.accessibilityLabel = text(title)
         button.addAction(action, for: .touchUpInside)
         button.widthAnchor.constraint(greaterThanOrEqualToConstant: 48).isActive = true
         button.heightAnchor.constraint(greaterThanOrEqualToConstant: 48).isActive = true
@@ -31,8 +33,8 @@ final class BrowserController: UIViewController, WKNavigationDelegate, UITextFie
         browser = WKWebView(frame: .zero, configuration: configuration)
         browser.navigationDelegate = self
         browser.allowsBackForwardNavigationGestures = true
-        address.placeholder = "HTTPS address or search"
-        address.accessibilityLabel = "Address or search"
+        address.placeholder = text("HTTPS address or search")
+        address.accessibilityLabel = text("Address or search")
         address.accessibilityIdentifier = "forge-address"
         address.borderStyle = .roundedRect
         address.autocapitalizationType = .none
@@ -42,7 +44,7 @@ final class BrowserController: UIViewController, WKNavigationDelegate, UITextFie
         address.delegate = self
         let go = button("Go", symbol: "arrow.right", action: UIAction { [weak self] _ in self?.navigate() })
         let toolbar = UIStackView(arrangedSubviews: [address, go])
-        status.text = "WebKit prototype — HTTPS only. Not desktop Forge."
+        status.text = text("WebKit prototype — HTTPS only. Not desktop Forge.")
         status.font = .preferredFont(forTextStyle: .caption1)
         status.textColor = .secondaryLabel
         status.numberOfLines = 0
@@ -75,7 +77,7 @@ final class BrowserController: UIViewController, WKNavigationDelegate, UITextFie
 
     private func navigate() {
         guard let url = NavigationPolicy.input(address.text ?? "") else {
-            status.text = "Unsupported address. Only HTTPS is enabled."
+            status.text = text("Unsupported address. Only HTTPS is enabled.")
             return
         }
         address.resignFirstResponder()
@@ -85,7 +87,7 @@ final class BrowserController: UIViewController, WKNavigationDelegate, UITextFie
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = action.request.url, NavigationPolicy.allows(url) else {
-            status.text = "Unsupported navigation. No external app was opened."
+            status.text = text("Unsupported navigation. No external app was opened.")
             decisionHandler(.cancel)
             return
         }
@@ -93,12 +95,12 @@ final class BrowserController: UIViewController, WKNavigationDelegate, UITextFie
         decisionHandler(action.targetFrame == nil ? .cancel : .allow)
     }
 
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) { status.text = "Loading…" }
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { status.text = "Page loaded" }
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) { status.text = text("Loading…") }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { status.text = text("Page loaded") }
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        status.text = "Page could not be loaded. No certificate exception was added."
+        status.text = text("Page could not be loaded. No certificate exception was added.")
     }
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        status.text = "Page could not be loaded."
+        status.text = text("Page could not be loaded.")
     }
 }
