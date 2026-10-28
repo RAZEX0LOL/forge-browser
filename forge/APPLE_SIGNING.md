@@ -52,3 +52,23 @@ builds, submitting for review and releasing publicly are separate actions.
 Never commit `.p8`, PEM/private-key files, PKCS#12 exports, API environment files,
 JWTs, device identifiers or provisioning profiles. Notarization does not imply
 App Store approval, browser privacy certification or automatic security updates.
+
+## Maintainer-local results — 2026-10-28
+
+Separate Apple Silicon and Intel copies were Developer ID signed, accepted by
+Apple's notary service, ticket-stapled and accepted by Gatekeeper. These local
+packages have not replaced the previously published ad-hoc development assets.
+
+The signed Apple Silicon app passed 285 browser integration checks. The signed
+Intel app's local Rosetta run timed out connecting to Marionette; a controlled
+comparison reproduced the same timeout with the original ad-hoc Intel app.
+This does not establish a signing regression, nor does it validate signed Intel
+runtime behavior. A post-signing native Intel run is still required. The original
+Intel package's earlier 270 native CI checks apply to its pre-signing state only.
+
+The iOS prototype was archived and exported locally with Apple Distribution
+signing, version 0.1.0 build 2, and a dedicated App Store profile. The exported
+IPA's integrity and profile metadata were checked; it is not a direct-install IPA
+and has not been uploaded to TestFlight. Creating the app record still requires
+an authenticated App Store Connect website session. No store review or public
+release has been requested.
