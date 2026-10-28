@@ -6,7 +6,7 @@ on:
         description: Native platform to build
         type: choice
         default: all
-        options: [all, linux-x64, windows-x64, macos-intel]
+        options: [all, arm-desktops, linux-x64, windows-x64, macos-intel, linux-arm64, windows-arm64, macos-arm64]
 permissions:
   contents: read
 env:
@@ -27,8 +27,12 @@ jobs:
             {'runner': 'ubuntu-24.04', 'target': 'linux-x64'},
             {'runner': 'windows-2022', 'target': 'windows-x64'},
             {'runner': 'macos-15-intel', 'target': 'macos-intel'},
+            {'runner': 'ubuntu-24.04-arm', 'target': 'linux-arm64'},
+            {'runner': 'windows-11-arm', 'target': 'windows-arm64'},
+            {'runner': 'macos-15', 'target': 'macos-arm64'},
           ]
-          selected = [t for t in targets if os.environ['TARGET'] in ('all', t['target'])]
+          selected = [t for t in targets if os.environ['TARGET'] in ('all', t['target'])
+                      or (os.environ['TARGET'] == 'arm-desktops' and t['target'].endswith('arm64'))]
           if not selected:
               raise SystemExit('Unknown platform')
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
@@ -48,6 +52,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

@@ -14,6 +14,7 @@ from pathlib import Path
 import platform
 import shutil
 import subprocess
+import struct
 import sys
 
 PROJECT=Path(__file__).resolve().parents[1]
@@ -22,6 +23,28 @@ ROOT=PROJECT.parent
 
 def run(*command,env=None):
     subprocess.run([str(item) for item in command],cwd=ROOT,env=env,check=True)
+
+
+def verify_architecture(binary,system,machine):
+    arm=machine.lower() in ('arm64','aarch64')
+    if system=='darwin':
+        run('lipo','-verify_arch','arm64' if arm else 'x86_64',binary)
+        return
+    with binary.open('rb') as file:
+        header=file.read(64)
+        if system=='linux':
+            if header[:5]!=b'\x7fELF\x02' or header[5]!=1: raise ValueError('Expected little-endian ELF64 runtime')
+            actual=struct.unpack_from('<H',header,18)[0]
+            expected=183 if arm else 62
+        elif system=='win32':
+            if header[:2]!=b'MZ': raise ValueError('Expected PE runtime')
+            file.seek(struct.unpack_from('<I',header,0x3c)[0])
+            coff=file.read(6)
+            if coff[:4]!=b'PE\0\0': raise ValueError('Invalid PE signature')
+            actual=struct.unpack_from('<H',coff,4)[0]
+            expected=0xaa64 if arm else 0x8664
+        else: raise ValueError('Unsupported runtime format')
+    if actual!=expected: raise ValueError(f'Runtime architecture mismatch: {actual:#x} != {expected:#x}')
 
 
 def main():
@@ -42,6 +65,7 @@ def main():
         app=output/'Forge.app'
         run(sys.executable,PROJECT/'scripts/package_macos.py','--source',ROOT,'--output',app,env=env)
         binary=app/'Contents/MacOS/forge'
+        verify_architecture(app/'Contents/MacOS/firefox',sys.platform,platform.machine())
         archive=output/f'Forge-development-{target}.zip'
         run('ditto','-c','-k','--sequesterRsrc','--keepParent',app,archive)
     else:
@@ -67,6 +91,7 @@ def main():
                 'exec "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/firefox" --no-remote --profile "$root/profile" "$@"\n')
             launcher.chmod(0o755)
         if not binary.is_file(): raise RuntimeError(f'Missing built runtime: {binary.name}')
+        verify_architecture(binary,sys.platform,platform.machine())
         archive=Path(shutil.make_archive(str(output/f'Forge-development-{target}'),
                     'zip' if sys.platform=='win32' else 'xztar',root_dir=output,base_dir='Forge'))
     with archive.open('rb') as file: digest=hashlib.file_digest(file,'sha256').hexdigest()

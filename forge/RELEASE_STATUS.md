@@ -17,6 +17,10 @@ unverified. Native Gecko macOS accessibility-bridge tests are not VoiceOver test
 
 ## Before publishing other desktop packages
 
+Linux x64 and Intel macOS now have successful native CI builds and smoke checks;
+Windows x64 has a built archive with a test-harness fix under retest.
+See [BUILD_MATRIX.md](BUILD_MATRIX.md) for exact counts and remaining work.
+
 - Build the pinned source/runtime on appropriate Windows, Linux and Intel macOS runners.
 - Replace and audit all remaining platform branding and package metadata.
 - Add platform-specific packaging rather than relabeling upstream installers.
@@ -27,13 +31,15 @@ unverified. Native Gecko macOS accessibility-bridge tests are not VoiceOver test
 
 ## Mobile work
 
-Android requires a mobile shell/application using GeckoView or the upstream Android
-project, touch navigation, state persistence and new device tests. The desktop XUL
-overlay is not an Android UI. No APK/AAB exists for Forge yet.
+An initial Android GeckoView shell now exists in `mobile/android`, with separate
+unit and native emulator tests. Builds are being brought up; no production APK/AAB
+is available. Touch feature parity and state persistence still require work.
+The desktop XUL overlay is not an Android UI.
 
-iOS/iPadOS requires a separate application, Apple toolchain and provisioning.
-Engine choice and distribution eligibility must be established for the intended
-regions and Apple programs before implementation. No Forge IPA exists yet.
+iOS/iPadOS now has an initial WKWebView application in `mobile/ios`, with a successful
+Simulator build and four locally passing native tests. This is not Gecko or a
+claim of alternate-engine eligibility. Phone distribution requires Apple's
+provisioning/signing process; no installable Forge IPA exists yet.
 
 ## Deliberately not included in the public source export
 

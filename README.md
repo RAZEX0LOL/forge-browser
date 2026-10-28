@@ -18,12 +18,12 @@ secure replacement for an up-to-date browser.
 | Platform | Actual status |
 | --- | --- |
 | macOS Apple Silicon | Locally built and integration-tested; ad-hoc signed, not notarized |
-| macOS Intel | Native CI build workflow added; success/runtime validation not yet established |
-| Windows x64 | Native CI build workflow added; no verified installer yet |
-| Linux x64 | Native CI build workflow added; no verified package yet |
+| macOS Intel | Native development app built; 270 browser checks passed on Intel CI |
+| Windows x64 | Portable development build produced; UTF-8 test-harness fix under retest, no validated release yet |
+| Linux x64 | Native portable development build produced; 260 browser checks passed on Linux CI |
 | Linux ARM64 / Windows ARM64 | Planned; no Forge build or runtime validation yet |
 | Android | New minimal GeckoView prototype; build/device validation pending, no production APK/AAB |
-| iOS / iPadOS | New WebKit prototype compiles for Simulator arm64/x86_64; no signed device IPA |
+| iOS / iPadOS | New WebKit prototype compiles for Simulator; four native tests passed locally, no signed device IPA |
 
 No placeholder images or upstream Firefox binaries are presented as Forge builds.
 Android and iOS are separate prototypes, not ports of this desktop interface.
