@@ -25,6 +25,11 @@ JDK 17, compile SDK 37 (target SDK 35), Gradle 9.3.1, Android Gradle Plugin 9.1.
 The engine is downloaded over HTTPS from Mozilla's Maven repository and is
 independently versioned from desktop Gecko. Its exact source and license notices
 are available from the same Maven coordinates (`-sources.jar`) and Mozilla.
+The full native engine source revision declared by that version's official POM is
+[`5add844c26613d7e4d84c799d6e23cf987b1240d`](https://hg.mozilla.org/releases/mozilla-release/rev/5add844c26613d7e4d84c799d6e23cf987b1240d).
+This differs from the desktop source base. GeckoView also has AndroidX, Kotlin,
+media and FIDO dependencies with their own applicable licenses; their upstream
+notices are not replaced by Forge's MPL notice.
 No production signing keys are committed.
 
 ```sh

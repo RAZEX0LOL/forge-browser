@@ -1,0 +1,45 @@
+name: Publish verified Forge development artifacts
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Owner-created empty draft prerelease tag
+        required: true
+      desktop_run:
+        description: Successful Linux x64 and Intel macOS artifact run
+        required: true
+      arm_run:
+        description: Successful Linux ARM64 and Windows ARM64 artifact run
+        required: true
+      windows_run:
+        description: Successful Windows x64 artifact run
+        required: true
+      mobile_run:
+        description: Successful ABI-split Android and device/simulator iOS artifact run
+        required: true
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: forge/scripts
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify provenance, checksums, smoke results and publish the draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          DESKTOP_RUN: ${{ inputs.desktop_run }}
+          ARM_RUN: ${{ inputs.arm_run }}
+          WINDOWS_RUN: ${{ inputs.windows_run }}
+          MOBILE_RUN: ${{ inputs.mobile_run }}
+        run: |
+          python forge/scripts/publish_artifacts.py --repo "$REPOSITORY" --tag "$RELEASE_TAG" --desktop-run "$DESKTOP_RUN" --arm-run "$ARM_RUN" --windows-run "$WINDOWS_RUN" --mobile-run "$MOBILE_RUN"
