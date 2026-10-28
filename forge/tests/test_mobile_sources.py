@@ -7,6 +7,17 @@ MOBILE=Path(__file__).resolve().parents[1]/'mobile'
 
 
 class MobileResourceTests(unittest.TestCase):
+    def test_ios_distribution_metadata_supports_ipad_and_only_platform_crypto(self):
+        source=(MOBILE/'ios/project.yml').read_text(encoding='utf-8')
+        orientations=re.search(r"INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: '([^']+)'",source)
+        self.assertIsNotNone(orientations)
+        self.assertEqual(set(orientations.group(1).split()), {
+            'UIInterfaceOrientationPortrait', 'UIInterfaceOrientationPortraitUpsideDown',
+            'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight'})
+        self.assertIn('INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO',source)
+        self.assertNotIn('DEVELOPMENT_TEAM:',source)
+        self.assertNotIn('PROVISIONING_PROFILE_SPECIFIER:',source)
+
     def test_android_russian_and_english_strings_have_matching_unique_keys(self):
         root=MOBILE/'android/app/src/main/res'
         catalogs=[]
