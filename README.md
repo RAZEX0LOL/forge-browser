@@ -15,15 +15,19 @@ secure replacement for an up-to-date browser.
 
 ## Platform status
 
+[Download the multiplatform development prerelease](https://github.com/RAZEX0LOL/forge-browser/releases/tag/v0.1.0-dev.20261028-multiplatform).
+Its 13 assets include the packages below, `MANIFEST.json` with exact per-package
+source commits, and `SHA256SUMS`.
+
 | Platform | Actual status |
 | --- | --- |
-| macOS Apple Silicon | Locally built and integration-tested; ad-hoc signed, not notarized |
+| macOS Apple Silicon | Published native-Russian DMG: 285 local browser checks; separate CI build: 270 passed; ad-hoc signed, not notarized |
 | macOS Intel | Native development app built; 270 browser checks passed on Intel CI |
-| Windows x64 | Portable development build produced; UTF-8 test-harness fix under retest, no validated release yet |
+| Windows x64 | Published portable ZIP; 260 browser checks passed on native CI |
 | Linux x64 | Native portable development build produced; 260 browser checks passed on Linux CI |
-| Linux ARM64 / Windows ARM64 | Planned; no Forge build or runtime validation yet |
-| Android | New minimal GeckoView prototype; build/device validation pending, no production APK/AAB |
-| iOS / iPadOS | New WebKit prototype compiles for Simulator; four native tests passed locally, no signed device IPA |
+| Linux ARM64 / Windows ARM64 | Published portable packages; 260 browser checks passed on each native ARM64 runner |
+| Android | Published GeckoView debug APKs for arm64-v8a, armeabi-v7a and x86_64; unit tests, lint and two x86_64 emulator tests passed; physical ARM devices untested |
+| iOS / iPadOS | Published WebKit Simulator ZIP and unsigned device XCArchive; four native tests passed in English and Russian on Simulator; no installable signed IPA |
 
 No placeholder images or upstream Firefox binaries are presented as Forge builds.
 Android and iOS are separate prototypes, not ports of this desktop interface.
