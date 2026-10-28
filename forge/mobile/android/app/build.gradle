@@ -1,7 +1,7 @@
 plugins { id 'com.android.application' }
 android {
     namespace 'org.forgebrowser.mobile'
-    compileSdk 37
+    compileSdk { version = release(37) { minorApiLevel = 0 } }
     defaultConfig {
         applicationId 'org.forgebrowser.mobile.development'
         minSdk 26

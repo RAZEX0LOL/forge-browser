@@ -8,8 +8,9 @@ interface, not Firefox/Fenix with a changed name, and not stable browsers.
 | Android | Mozilla GeckoView `159.0.20261022150525` | HTTPS navigation/search, back/forward/reload, native address field, ru/en strings |
 | iOS/iPadOS | Apple's system WKWebView | HTTPS navigation/search, back/forward/reload, native address field, phone/tablet layout |
 
-Both stay local until an address is entered, reject active/local/external URL
-schemes and credential-bearing URLs, and do not override certificate failures.
+Both start without remote page navigation and reject active/local/external URL
+schemes and credential-bearing URLs. Neither overrides certificate failures.
+This is not a claim that the underlying engine or OS sends no background traffic.
 HTTP is deliberately unsupported in these initial prototypes. Search goes to
 DuckDuckGo only when the person submits a search. Popups, downloads, permissions,
 password management, extensions, multiple tabs/workspaces, desktop themes, browser

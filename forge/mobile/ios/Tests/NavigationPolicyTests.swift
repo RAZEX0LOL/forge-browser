@@ -29,7 +29,7 @@ final class NavigationPolicyTests: XCTestCase {
         let status = views.compactMap { $0 as? UILabel }.first { $0.accessibilityIdentifier == "forge-status" }!
         XCTAssertNotNil(web.navigationDelegate)
         XCTAssertTrue(web.configuration.websiteDataStore.isPersistent)
-        XCTAssertNil(web.url, "No startup network request")
+        XCTAssertNil(web.url, "No startup page navigation")
         XCTAssertEqual(views.compactMap { $0 as? UIButton }.count, 4)
         field.text = "javascript:alert(1)"
         XCTAssertTrue(controller.textFieldShouldReturn(field))

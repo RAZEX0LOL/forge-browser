@@ -68,7 +68,7 @@ final class BrowserController: UIViewController, WKNavigationDelegate, UITextFie
             browser.observe(\.canGoBack, options: [.initial, .new]) { [weak self] view, _ in self?.back.isEnabled = view.canGoBack },
             browser.observe(\.canGoForward, options: [.initial, .new]) { [weak self] view, _ in self?.forward.isEnabled = view.canGoForward }
         ]
-        // Stay local until the person enters an address; no startup request.
+        // No startup page navigation. This does not audit WebKit/OS background traffic.
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool { navigate(); return true }

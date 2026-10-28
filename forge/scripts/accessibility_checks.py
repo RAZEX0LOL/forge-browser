@@ -13,7 +13,7 @@ def run_accessibility_checks(client, results, passed):
         if result is not True: raise AssertionError(f'{name}: {result!r}')
         passed.append(name);print(f'PASS {name}',flush=True)
     resource=Path(__file__).resolve().parents[1]/'overlay/locales/ru/forge.ftl'
-    ids=re.findall(r'^(forge-[\w-]+)\s*=',resource.read_text(),re.MULTILINE)
+    ids=re.findall(r'^(forge-[\w-]+)\s*=',resource.read_text(encoding='utf-8'),re.MULTILINE)
     result=client.execute_script(r"""
         const {createStrings}=ChromeUtils.importESModule('chrome://browser/content/forge/Localization.sys.mjs');
         return ['ru','en-US'].every(locale=>{const t=createStrings(window,locale);
