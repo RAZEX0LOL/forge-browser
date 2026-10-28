@@ -36,4 +36,45 @@ final class NavigationPolicyTests: XCTestCase {
         XCTAssertNil(web.url)
         XCTAssertTrue(status.text?.contains("Unsupported") == true)
     }
+
+    @MainActor
+    func testWebKitRendersLocalDocumentThroughBrowserPolicy() async throws {
+        let controller = BrowserController()
+        controller.loadViewIfNeeded()
+        func findWeb(_ view: UIView) -> WKWebView? {
+            if let web = view as? WKWebView { return web }
+            return view.subviews.compactMap { findWeb($0) }.first
+        }
+        let web = findWeb(controller.view)!
+        let loaded = expectation(description: "Local document rendered")
+        let observer = LocalLoadObserver(controller: controller, loaded: loaded)
+        web.navigationDelegate = observer
+        web.loadHTMLString("<html><body><h1 id='fixture'>Forge fixture</h1></body></html>", baseURL: nil)
+        await fulfillment(of: [loaded], timeout: 15)
+        let text = try await web.evaluateJavaScript("document.getElementById('fixture').textContent")
+        XCTAssertEqual(text as? String, "Forge fixture")
+        withExtendedLifetime(observer) {}
+    }
+}
+
+@MainActor
+private final class LocalLoadObserver: NSObject, WKNavigationDelegate {
+    let controller: BrowserController
+    let loaded: XCTestExpectation
+    init(controller: BrowserController, loaded: XCTestExpectation) {
+        self.controller = controller
+        self.loaded = loaded
+    }
+    func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        controller.webView(webView, decidePolicyFor: action, decisionHandler: decisionHandler)
+    }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        controller.webView(webView, didFinish: navigation)
+        loaded.fulfill()
+    }
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        XCTFail("Local document load failed: \(error)")
+        loaded.fulfill()
+    }
 }

@@ -26,6 +26,18 @@ jobs:
           gradle-version: '8.11.1'
       - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - run: gradle --no-daemon :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+      - name: Allow this hosted runner to use KVM
+        run: |
+          sudo apt-get install -y acl
+          sudo setfacl -m "u:$(id -un):rw" /dev/kvm
+      - name: Android native UI and Gecko runtime checks
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: default
+          working-directory: forge/mobile/android
+          script: gradle --no-daemon :app:connectedDebugAndroidTest
       - uses: actions/upload-artifact@v4
         with:
           name: Forge-android-prototype-debug

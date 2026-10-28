@@ -52,6 +52,7 @@ public final class BrowserActivity extends Activity {
         });
         LinearLayout toolbar = new LinearLayout(this);
         address = new EditText(this);
+        address.setTag("forge-address");
         address.setSingleLine(true);
         address.setTextColor(Color.WHITE);
         address.setHintTextColor(Color.LTGRAY);
@@ -68,11 +69,13 @@ public final class BrowserActivity extends Activity {
         toolbar.addView(go);
         root.addView(toolbar);
         status = new TextView(this);
+        status.setTag("forge-status");
         status.setTextColor(Color.LTGRAY);
         status.setText(R.string.prototype);
         status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
         root.addView(status);
         browser = new GeckoView(this);
+        browser.setTag("forge-browser");
         root.addView(browser, new LinearLayout.LayoutParams(-1, 0, 1));
         LinearLayout navigation = new LinearLayout(this);
         back = button(navigation, R.string.back, v -> session.goBack()); back.setEnabled(false);
