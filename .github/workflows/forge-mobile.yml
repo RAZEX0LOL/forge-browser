@@ -71,9 +71,15 @@ jobs:
           xcodebuild -quiet -project ForgeMobile.xcodeproj -scheme ForgeMobile -destination "platform=iOS Simulator,id=$DEVICE" -derivedDataPath build CODE_SIGN_IDENTITY=- test
           xcodebuild -quiet -project ForgeMobile.xcodeproj -scheme ForgeMobile -destination "platform=iOS Simulator,id=$DEVICE" -derivedDataPath build -testLanguage ru -testRegion RU -resultBundlePath build/Russian.xcresult CODE_SIGN_IDENTITY=- test
       - run: ditto -c -k --keepParent build/Build/Products/Debug-iphonesimulator/ForgeMobile.app Forge-ios-simulator-prototype.zip
+      - name: Compile unsigned iPhone/iPad device archive (not an installable IPA)
+        run: |
+          xcodebuild -quiet -project ForgeMobile.xcodeproj -scheme ForgeMobile -sdk iphoneos -destination 'generic/platform=iOS' -configuration Release -archivePath build/Forge-ios-device-unsigned.xcarchive CODE_SIGNING_ALLOWED=NO archive
+          ditto -c -k --keepParent build/Forge-ios-device-unsigned.xcarchive Forge-ios-device-unsigned.xcarchive.zip
       - uses: actions/upload-artifact@v4
         with:
           name: Forge-ios-simulator-prototype
-          path: forge/mobile/ios/Forge-ios-simulator-prototype.zip
+          path: |
+            forge/mobile/ios/Forge-ios-simulator-prototype.zip
+            forge/mobile/ios/Forge-ios-device-unsigned.xcarchive.zip
           if-no-files-found: error
           retention-days: 7

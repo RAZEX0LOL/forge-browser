@@ -34,6 +34,10 @@ gradle --no-daemon :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
 
 The resulting APK uses a development/debug signing identity, not a stable
 publisher key. A successful compile is not a device or emulator runtime test.
+Separate APKs are generated for arm64-v8a, armeabi-v7a and x86_64; choose the
+matching ABI rather than downloading every engine architecture in one APK.
+Native CI runtime tests currently exercise x86_64 in an Android emulator, not
+physical ARM phones. The prototype does not register itself as the default browser.
 
 ## iOS / iPadOS
 
@@ -50,6 +54,8 @@ xcodebuild -project ForgeMobile.xcodeproj -scheme ForgeMobile -sdk iphonesimulat
 Simulator `.app` archives cannot be installed as an iPhone IPA. Device distribution
 requires an appropriate Apple account, provisioning and signing; no personal
 credentials, team IDs or signing material are assumed or uploaded.
+The workflow also compiles an **unsigned device `.xcarchive`** for developers.
+It is not an installable or App Store-approved IPA and does not bypass provisioning.
 
 The mobile workflow is manually dispatched and uploads only development artifacts,
 not automatic public releases. Source is MPL-2.0, with engine/platform licenses

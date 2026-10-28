@@ -34,7 +34,9 @@ final class NavigationPolicyTests: XCTestCase {
         field.text = "javascript:alert(1)"
         XCTAssertTrue(controller.textFieldShouldReturn(field))
         XCTAssertNil(web.url)
-        XCTAssertEqual(status.text, NSLocalizedString("Unsupported address. Only HTTPS is enabled.", comment: ""))
+        let russian = Locale.preferredLanguages.first?.hasPrefix("ru") == true
+        XCTAssertEqual(field.accessibilityLabel, russian ? "Адрес или поиск" : "Address or search")
+        XCTAssertEqual(status.text, russian ? "Адрес не поддерживается. Разрешён только HTTPS." : "Unsupported address. Only HTTPS is enabled.")
     }
 
     @MainActor
