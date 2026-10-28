@@ -1,0 +1,8 @@
+upstream/
+__pycache__/
+.DS_Store
+*.pyc
+.venv-test/
+.mozbuild/
+test-results/
+dist/

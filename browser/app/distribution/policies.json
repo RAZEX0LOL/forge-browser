@@ -1,0 +1,26 @@
+{
+  "policies": {
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "UserMessaging": {
+      "ExtensionRecommendations": false,
+      "FeatureRecommendations": false,
+      "UrlbarInterventions": false,
+      "SkipOnboarding": true,
+      "MoreFromMozilla": false,
+      "FirefoxLabs": false,
+      "Locked": true
+    },
+    "FirefoxHome": {
+      "SponsoredTopSites": false,
+      "Stories": false,
+      "SponsoredStories": false,
+      "Weather": false,
+      "Highlights": false,
+      "Widgets": {
+        "Enabled": false
+      },
+      "Locked": true
+    }
+  }
+}

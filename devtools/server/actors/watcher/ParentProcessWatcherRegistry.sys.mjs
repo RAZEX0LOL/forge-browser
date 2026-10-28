@@ -1,3 +1,4 @@
+// Forge: drain watcher teardown before unregistering process actors.
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -241,8 +242,16 @@ export const ParentProcessWatcherRegistry = {
   /**
    * Unregister the JS Actors if there is no more DevTools code observing any target/resource.
    */
+  deferUnregisterUntil(promise) {
+    pendingTeardowns.add(promise);
+    promise.finally(() => {
+      pendingTeardowns.delete(promise);
+      this.maybeUnregisterJSActors();
+    });
+  },
+
   maybeUnregisterJSActors() {
-    if (sessionDataByWatcherActor.size == 0) {
+    if (sessionDataByWatcherActor.size == 0 && pendingTeardowns.size === 0) {
       unregisterBrowserToolboxJSProcessActor();
       unregisterJSProcessActor();
     }
@@ -316,6 +325,7 @@ export const ParentProcessWatcherRegistry = {
 };
 
 // Boolean flag to know if the DevToolsProcess JS Process Actor is currently registered
+const pendingTeardowns = new Set();
 let isJSProcessActorRegistered = false;
 let isBrowserToolboxJSProcessActorRegistered = false;
 

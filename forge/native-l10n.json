@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/mozilla-l10n/firefox-l10n.git",
+  "revision": "f8582908814c562a576effdcc4d592fe65337937",
+  "locale": "ru",
+  "note": "Built-in resources only; merge against the pinned Gecko source and retain en-US fallback. Not an unsigned extension."
+}

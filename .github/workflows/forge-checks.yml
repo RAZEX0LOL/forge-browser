@@ -1,0 +1,28 @@
+name: Forge source checks
+on:
+  workflow_dispatch:
+  push:
+    paths: ['forge/**', '.github/workflows/forge-checks.yml']
+  pull_request:
+    paths: ['forge/**', '.github/workflows/forge-checks.yml']
+permissions:
+  contents: read
+jobs:
+  source-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: forge
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: forge
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node --test tests/*.test.mjs
+      - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - run: python3 -m compileall -q scripts tests

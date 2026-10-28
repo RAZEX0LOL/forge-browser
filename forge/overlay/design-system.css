@@ -1,0 +1,314 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. https://mozilla.org/MPL/2.0/
+ * This sheet is scoped to browser-owned documents. Never style web pages. */
+
+@-moz-document url-prefix("chrome://browser/content/browser.xhtml"),
+  url-prefix("chrome://browser/content/preferences/"), url-prefix("chrome://browser/content/downloads/"),
+  url-prefix("chrome://browser/content/places/"), url-prefix("chrome://browser/content/pageinfo/"),
+  url-prefix("chrome://browser/content/forge/"), url-prefix("chrome://browser/content/aboutDialog.xhtml"),
+  url-prefix("chrome://browser/content/sanitize"),
+  url-prefix("chrome://mozapps/content/extensions/"), url-prefix("chrome://mozapps/content/downloads/"),
+  url-prefix("chrome://devtools/content/"),
+  url-prefix("chrome://global/content/commonDialog.xhtml"),
+  url-prefix("chrome://global/content/selectDialog.xhtml"), url-prefix("chrome://global/content/print.html"),
+  url("about:preferences"), url-prefix("about:preferences#"), url-prefix("about:preferences?"),
+  url("about:addons"), url-prefix("about:addons#"), url-prefix("about:addons?"),
+  url("about:downloads"), url-prefix("about:downloads#"), url-prefix("about:downloads?"),
+  url("about:processes"), url-prefix("about:processes#"), url-prefix("about:processes?"),
+  url("about:debugging"), url-prefix("about:debugging#"), url-prefix("about:debugging?"),
+  url("about:logins"), url-prefix("about:logins#"), url-prefix("about:logins?"),
+  url("about:policies"), url-prefix("about:policies#"), url-prefix("about:policies?"),
+  url("about:config"), url-prefix("about:config#"), url-prefix("about:config?"),
+  url("about:support"), url-prefix("about:support#"), url-prefix("about:support?"),
+  url("about:profiles"), url-prefix("about:profiles#"), url-prefix("about:profiles?"),
+  url("about:devtools-toolbox"), url-prefix("about:devtools-toolbox#"), url-prefix("about:devtools-toolbox?"),
+  url("about:privatebrowsing"), url-prefix("about:privatebrowsing#"), url-prefix("about:privatebrowsing?") {
+  :root {
+    color-scheme: dark !important;
+    --forge-canvas: #10191a;
+    --forge-surface: #192624;
+    --forge-raised: #21332d;
+    --forge-line: #3b5146;
+    --forge-ink: #e6f2e9;
+    --forge-muted: #a7bcae;
+    --background-color-canvas: var(--forge-canvas) !important;
+    --background-color-box: var(--forge-surface) !important;
+    --background-color-box-info: #20332e !important;
+    --background-color-box-warning: #40351d !important;
+    --background-color-box-critical: #45292c !important;
+    --background-color-canvas-selected: var(--forge-raised) !important;
+    --background-color-selected: #294d3c !important;
+    --background-color-information: #203a40 !important;
+    --background-color-success: #213d2c !important;
+    --background-color-warning: #49371e !important;
+    --background-color-critical: #4a292d !important;
+    --text-color: var(--forge-ink) !important;
+    --text-color-deemphasized: var(--forge-muted) !important;
+    --text-color-disabled: #82988a !important;
+    --text-color-error: #ffaaa9 !important;
+    --text-color-warning: #ffd18d !important;
+    --text-color-success: #a4efce !important;
+    --icon-color: currentColor !important;
+    --icon-color-success: #a4efce !important;
+    --icon-color-warning: #ffd18d !important;
+    --icon-color-critical: #ffaaa9 !important;
+    --border-color: var(--forge-line) !important;
+    --border-color-interactive: #6a8c77 !important;
+    --border-color-deemphasized: #2c4035 !important;
+    --border-radius-small: var(--forge-control-radius, 10px) !important;
+    --border-radius-medium: var(--forge-radius, 12px) !important;
+    --border-radius-large: calc(var(--forge-radius, 12px) + 6px) !important;
+    --button-background-color: #293d32 !important;
+    --button-background-color-hover: #35523f !important;
+    --button-background-color-active: #42664e !important;
+    --button-text-color: var(--forge-ink) !important;
+    --button-background-color-primary: var(--forge-accent, #a4efce) !important;
+    --button-background-color-primary-hover: color-mix(in srgb, var(--forge-accent, #a4efce) 85%, white) !important;
+    --button-background-color-primary-active: color-mix(in srgb, var(--forge-accent, #a4efce) 80%, black) !important;
+    --button-text-color-primary: #11271c !important;
+    --button-background-color-destructive: #c44f5b !important;
+    --button-text-color-destructive: white !important;
+    --button-border-radius: var(--forge-control-radius, 10px) !important;
+    --button-min-height: 36px !important;
+    --input-background-color: #14211c !important;
+    --input-color: var(--forge-ink) !important;
+    --input-border-color: #526d5b !important;
+    --input-border-color-hover: #87ad95 !important;
+    --input-border-color-focus: var(--forge-accent, #a4efce) !important;
+    --input-border-radius: var(--forge-control-radius, 10px) !important;
+    --checkbox-checked-bgcolor: var(--forge-accent, #a4efce) !important;
+    --checkbox-checked-color: #11271c !important;
+    --link-color: var(--forge-accent, #a4efce) !important;
+    --link-color-hover: #c7fbe0 !important;
+    --link-color-active: #8ac7aa !important;
+    --focus-outline-color: var(--forge-accent, #a4efce) !important;
+    --color-accent-primary: var(--forge-accent, #a4efce) !important;
+    --color-accent-primary-hover: #c7fbe0 !important;
+    --color-accent-primary-active: #8ac7aa !important;
+    --color-accent-primary-selected: #294d3c !important;
+    --in-content-page-background: var(--forge-canvas) !important;
+    --in-content-page-color: var(--forge-ink) !important;
+    --in-content-box-background: var(--forge-surface) !important;
+    --in-content-box-background-odd: #16221d !important;
+    --in-content-box-border-color: var(--forge-line) !important;
+    --in-content-border-color: var(--forge-line) !important;
+    --in-content-button-background: #293d32 !important;
+    --in-content-button-background-hover: #35523f !important;
+    --in-content-primary-button-background: var(--forge-accent, #a4efce) !important;
+    --in-content-primary-button-text-color: #11271c !important;
+    --in-content-link-color: var(--forge-accent, #a4efce) !important;
+    --in-content-focus-outline-color: var(--forge-accent, #a4efce) !important;
+    --in-content-category-background-selected: #294d3c !important;
+    --in-content-item-selected: #294d3c !important;
+    --in-content-item-selected-text: var(--forge-ink) !important;
+    --font-family: system-ui, sans-serif !important;
+    --font-family-monospace: ui-monospace, monospace !important;
+    scrollbar-color: #658571 #15211c;
+  }
+  :is(button, menulist, select) { border-radius: var(--forge-control-radius, 10px) !important; }
+  :is(input[type="text"], input[type="search"], input[type="password"], input[type="url"],
+      textarea, textbox, search-textbox) {
+    background-color: #14211c !important;
+    color: #e6f2e9 !important;
+    border-color: #526d5b !important;
+    border-radius: var(--forge-control-radius, 10px) !important;
+  }
+  :is(input[type="checkbox"], input[type="radio"], input[type="range"]) { accent-color: var(--forge-accent, #a4efce) !important; }
+  :is(button, input, select, textarea):focus-visible { outline-color: var(--forge-accent, #a4efce) !important; }
+  :is(input, textarea):user-invalid { border-color: #ffaaa9 !important; }
+  moz-page-nav-button {
+    --page-nav-button-background-color: #1d3026 !important;
+    --page-nav-button-background-color-hover: #2b4936 !important;
+    --page-nav-button-background-color-active: #365f43 !important;
+    --page-nav-button-background-color-selected: #294d3c !important;
+    --page-nav-button-text-color: #dbece0 !important;
+    --page-nav-button-text-color-selected: var(--forge-accent, #a4efce) !important;
+    --page-nav-button-indicator-background-color: var(--forge-accent, #a4efce) !important;
+    --page-nav-button-border-radius: var(--forge-control-radius, 10px) !important;
+    --page-nav-button-padding: 12px 14px !important;
+  }
+  moz-button {
+    --button-background-color: #293d32 !important;
+    --button-background-color-hover: #35523f !important;
+    --button-background-color-primary: var(--forge-accent, #a4efce) !important;
+    --button-text-color-primary: #11271c !important;
+    --button-border-radius: var(--forge-control-radius, 10px) !important;
+  }
+  moz-toggle {
+    --toggle-background-color-pressed: var(--forge-accent, #a4efce) !important;
+    --toggle-background-color-pressed-hover: #c7fbe0 !important;
+    --toggle-dot-background-color-on-pressed: #11271c !important;
+    --toggle-background-color: #293d32 !important;
+    --toggle-border-color: #668b72 !important;
+  }
+}
+
+/* Entire browser chrome: navigation, omnibox, dropdown results, popovers,
+ * bookmarks, extensions, permission prompts, downloads, context menus, find. */
+@-moz-document url("chrome://browser/content/browser.xhtml") {
+  :root {
+    --arrowpanel-background: #192624 !important;
+    --arrowpanel-color: #e6f2e9 !important;
+    --arrowpanel-border-color: #4a6755 !important;
+    --arrowpanel-border-radius: calc(var(--forge-radius) + 4px) !important;
+    --arrowpanel-menuitem-border-radius: var(--forge-control-radius) !important;
+    --arrowpanel-menuitem-padding: 11px 13px !important;
+    --arrowpanel-dimmed: #ffffff0d !important;
+    --arrowpanel-dimmed-further: #ffffff1a !important;
+    --panel-separator-color: #3b5146 !important;
+    --panel-description-color: #a7bcae !important;
+    --panel-shortcut-color: #b2c9b9 !important;
+    --panel-banner-item-background-color: #263e30 !important;
+    --toolbarbutton-border-radius: var(--forge-control-radius) !important;
+    --toolbarbutton-inner-padding: 9px !important;
+    --urlbarView-highlight-background: #2b4c39 !important;
+    --urlbarView-highlight-color: #f0faf3 !important;
+    --autocomplete-popup-background: #192624 !important;
+    --autocomplete-popup-color: #e6f2e9 !important;
+    --autocomplete-popup-highlight-background: #2b4c39 !important;
+    --autocomplete-popup-highlight-color: #f0faf3 !important;
+  }
+  #nav-bar { min-height: var(--forge-navigation-height, 50px) !important; border: none !important; }
+  #urlbar { font-size: 13px !important; }
+  #urlbar .urlbar-background { border-radius: var(--forge-radius) !important; background: #192b24 !important; border: 1px solid var(--forge-line) !important; box-shadow: none !important; }
+  #urlbar[focused] .urlbar-background { border-color: var(--forge-accent) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--forge-accent) 12%, transparent) !important; }
+  #urlbar[open] .urlbar-background { box-shadow: 0 22px 65px #0008 !important; }
+  .urlbarView { margin-top: 10px !important; padding: 6px !important; border-top: 1px solid #3b5146 !important; }
+  .urlbarView-row-inner { border-radius: var(--forge-control-radius) !important; padding-block: 12px !important; }
+  .urlbarView-row:hover > .urlbarView-row-inner { background: #294235 !important; }
+  .urlbarView-url { color: #b2d9bf !important; }
+  :is(panel, menupopup) { --panel-background: #192624; --panel-color: #e6f2e9; --panel-border-color: #4a6755; --panel-border-radius: calc(var(--forge-radius) + 4px); font: 12px/1.5 system-ui, sans-serif !important; }
+  :is(menupopup, panel)::part(content) { border-radius: calc(var(--forge-radius) + 4px) !important; box-shadow: 0 18px 50px #0008 !important; }
+  menupopup > :is(menu, menuitem) { padding-block: 8px !important; border-radius: var(--forge-control-radius) !important; margin-inline: 4px !important; transition: background-color var(--forge-motion-fast) var(--forge-ease); }
+  menupopup > :is(menu, menuitem)[_moz-menuactive="true"] { background: #2b4c39 !important; color: #f0faf3 !important; }
+  menuseparator { margin: 6px 12px !important; }
+  .panel-subview-body { padding: 10px !important; }
+  .subviewbutton { border-radius: var(--forge-control-radius) !important; }
+  .panel-header { padding: 18px 14px !important; border-bottom: 1px solid #3b5146 !important; }
+  .panel-header > h1 { font-weight: 700 !important; }
+  #downloadsListBox > richlistitem { border-radius: var(--forge-control-radius) !important; margin: 5px !important; padding: 12px !important; border: 1px solid #3b5146 !important; }
+  .downloadProgress { accent-color: var(--forge-accent) !important; }
+  #downloadsFooter { border-top: 1px solid #3b5146 !important; padding: 5px !important; }
+  .identity-popup-section { padding: 14px !important; }
+  .identity-popup-security-connection { border-radius: var(--forge-control-radius) !important; }
+  .popup-notification-body-container { padding: 20px !important; }
+  .notification-button { border-radius: var(--forge-control-radius) !important; }
+  tooltip { background: #192624 !important; color: #e6f2e9 !important; border: 1px solid #4a6755 !important; border-radius: 7px !important; padding: 8px 10px !important; font: 11px/1.5 system-ui !important; }
+  .findbar-container { background: #192624 !important; color: #e6f2e9 !important; padding: 12px !important; border-top: 1px solid #4a6755 !important; }
+  .findbar-textbox { border-radius: var(--forge-control-radius) !important; background: #14211c !important; color: #e6f2e9 !important; border: 1px solid #526d5b !important; padding: 8px !important; }
+  #PersonalToolbar { background: #17251f !important; padding: 6px !important; }
+  #PlacesToolbarItems > .bookmark-item { border-radius: 7px !important; padding: 6px 10px !important; }
+  #sidebar-box { background: #192624 !important; color: #e6f2e9 !important; border: 1px solid #3b5146 !important; border-radius: var(--forge-radius) !important; margin: 8px !important; }
+  .dialogBox { background: #192624 !important; color: #e6f2e9 !important; border: 1px solid #4a6755 !important; border-radius: calc(var(--forge-radius) + 4px) !important; }
+  :root[forge-center]:not([customizing]):not([forge-native-menu-open]) #PanelUI-menu-button { display: none; }
+  #forge-hub-button { list-style-image: url("chrome://browser/content/forge/hub.svg"); -moz-context-properties: stroke; stroke: var(--forge-accent); }
+}
+
+/* Real Firefox settings, not a mock settings page. Native bindings and all
+ * privacy/security states stay intact; panels, navigation and layout change. */
+@-moz-document url-prefix("about:preferences"), url-prefix("chrome://browser/content/preferences/") {
+  :root { --size-sidebar: 250px !important; --page-space-block-start: 28px !important; }
+  #preferences-root, #preferences-body { background: #10191a !important; color: #e6f2e9 !important; }
+  #categories { background: #17261f !important; border-inline-end: 1px solid #3b5146 !important; padding: 26px 14px !important; min-width: 190px; }
+  #categories > moz-page-nav-button { border-radius: var(--forge-control-radius) !important; margin-block: 3px !important; }
+  .main-content { padding-inline: clamp(16px, 3vw, 40px) !important; background: #10191a !important; min-width: 0 !important; box-sizing: border-box !important; }
+  .pane-container { max-width: 1100px !important; width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
+  #mainPrefPane { min-width: 0 !important; }
+  #search-container { box-sizing: border-box !important; }
+  #search-container { background: #10191a !important; padding-bottom: 22px !important; }
+  #forge-settings-header { padding-bottom: 20px; }
+  .forge-settings-eyebrow { font: 10px ui-monospace, monospace; letter-spacing: .17em; color: var(--forge-accent); }
+  #forge-settings-header h2 { font: 650 clamp(24px, 3vw, 38px)/1.15 system-ui, sans-serif; letter-spacing: -.04em; margin: 12px 0; }
+  #forge-settings-header p { color: #a7bcae; font: 12px/1.6 system-ui, sans-serif; }
+  #forge-settings-header nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  #forge-settings-header nav a { color: var(--forge-accent); background: #20362a; border: 1px solid #486851; border-radius: 8px; padding: 8px 12px; text-decoration: none; font: 11px/1.5 system-ui; }
+  #searchInput { min-height: 42px !important; border-radius: var(--forge-control-radius) !important; }
+  :is(setting-group, groupbox) { border: 1px solid #3b5146 !important; border-radius: calc(var(--forge-radius) + 4px) !important; background: #192624 !important; padding: 20px !important; margin-block: 14px !important; }
+  setting-control { padding-block: 15px !important; border-color: #344b3b !important; }
+  .subcategory { margin-block: 26px 12px !important; }
+  .subcategory > h1, .subcategory > h2 { font-weight: 650 !important; letter-spacing: -.025em; }
+  .content-blocking-category { border-radius: var(--forge-radius) !important; }
+}
+
+@-moz-document url-prefix("about:addons"), url-prefix("chrome://mozapps/content/extensions/") {
+  :root, body { background: #10191a !important; color: #e6f2e9 !important; }
+  .main-search, .main-heading { background: #10191a !important; padding: 20px 0 !important; }
+  addon-card, .addon-card, .card { border-radius: calc(var(--forge-radius) + 4px) !important; border: 1px solid #3b5146 !important; background: #192624 !important; box-shadow: none !important; margin-block: 16px !important; }
+  .card-contents { padding: 10px !important; }
+  .addon-name { font-size: 17px !important; font-weight: 650 !important; }
+  .addon-description { color: #a7bcae !important; line-height: 1.7 !important; }
+  #categories { background: #17261f !important; padding: 24px 12px !important; border-inline-end: 1px solid #3b5146 !important; }
+  .category { border-radius: var(--forge-control-radius) !important; padding-block: 12px !important; }
+  .category[selected] { background: #294d3c !important; color: #dff8e9 !important; }
+  panel-list { background: #21332d !important; border: 1px solid #4a6755 !important; border-radius: var(--forge-radius) !important; padding: 8px !important; }
+  #forge-extensions-empty { margin-top: 28px; border: 1px solid #3b5146; border-radius: calc(var(--forge-radius) + 6px); padding: 44px; background: #192624; text-align: center; }
+  #forge-extensions-empty .forge-empty-icon { color: var(--forge-accent); font: 64px/1 ui-monospace, monospace; margin-bottom: 24px; }
+  #forge-extensions-empty .forge-icon { display: block; width: 48px; height: 48px; margin-inline: auto; }
+  #forge-extensions-empty h2 { font-size: 26px; letter-spacing: -.035em; }
+  #forge-extensions-empty p { max-width: 410px; margin: 16px auto 0; line-height: 1.8; color: #a7bcae; }
+}
+
+@-moz-document url-prefix("about:downloads"), url-prefix("chrome://browser/content/downloads/"),
+  url-prefix("chrome://browser/content/places/") {
+  :root, body, #places { background: #10191a !important; color: #e6f2e9 !important; }
+  #downloadsListBox { background: #10191a !important; border: 0 !important; padding: 22px !important; }
+  #forge-downloads-header { padding: 40px 44px 26px; border-bottom: 1px solid #3b5146; }
+  #forge-downloads-header > div { font: 10px ui-monospace, monospace; color: var(--forge-accent); letter-spacing: .17em; }
+  #forge-downloads-header h1 { font: 650 36px/1.2 system-ui; letter-spacing: -.04em; margin: 16px 0; }
+  #forge-downloads-header p { color: #a7bcae; font: 13px/1.6 system-ui; }
+  #downloadsListEmptyDescription { color: #a7bcae !important; text-align: center; padding: 48px !important; font-size: 16px !important; }
+  #downloadsListEmptyDescription .forge-empty-icon { display: block; margin: 0 auto 24px; font: 64px/1 ui-monospace, monospace; color: var(--forge-accent); }
+  #downloadsListEmptyDescription h2 { color: #e6f2e9; font: 650 26px/1.3 system-ui; letter-spacing: -.035em; }
+  #downloadsListEmptyDescription p { font: 13px/1.8 system-ui; }
+  #downloadsListBox > richlistitem { background: #192624 !important; border: 1px solid #3b5146 !important; border-radius: var(--forge-radius) !important; margin-bottom: 12px !important; padding: 18px !important; color: #e6f2e9 !important; }
+  #downloadsListBox > richlistitem[selected] { border-color: var(--forge-accent) !important; background: #263f30 !important; }
+  #placesToolbar { padding: 14px !important; background: #192624 !important; border-bottom: 1px solid #3b5146 !important; }
+  menubar { appearance: none !important; background: #192624 !important; color: #e6f2e9 !important; padding: 5px !important; }
+  treecol { background: #263e30 !important; color: #e6f2e9 !important; border-color: #3b5146 !important; padding-block: 8px !important; }
+  #placesView { background: #10191a !important; }
+  tree { background: #10191a !important; color: #e6f2e9 !important; border-color: #3b5146 !important; }
+  treechildren::-moz-tree-row { min-height: 32px !important; }
+  treechildren::-moz-tree-row(selected) { background: #294d3c !important; }
+  treechildren::-moz-tree-cell-text(selected) { color: #f0faf3 !important; }
+  #placesList { background: #17261f !important; border-inline-end: 1px solid #3b5146 !important; padding: 10px !important; }
+  #detailsPane { background: #192624 !important; padding: 18px !important; border-top: 1px solid #3b5146 !important; }
+}
+
+@-moz-document url-prefix("about:logins"), url-prefix("about:processes"), url-prefix("about:policies"),
+  url-prefix("about:config"), url-prefix("about:support"), url-prefix("about:profiles"),
+  url-prefix("about:debugging"), url-prefix("about:privatebrowsing") {
+  :root, body { background: #10191a !important; color: #e6f2e9 !important; }
+  :is(table, .card, .container, .login-list, login-list, login-item) { border-color: #3b5146 !important; border-radius: var(--forge-radius) !important; }
+  th { background: #263e30 !important; color: #e6f2e9 !important; }
+  td { border-color: #3b5146 !important; }
+  tr:nth-child(even) { background: #192624 !important; }
+  input:not([type="checkbox"]):not([type="radio"]), select { background: #14211c !important; color: #e6f2e9 !important; border-color: #526d5b !important; border-radius: var(--forge-control-radius) !important; }
+}
+
+@-moz-document url-prefix("chrome://devtools/content/"), url-prefix("about:devtools-toolbox") {
+  :root {
+    --theme-body-background: #10191a !important;
+    --theme-body-color: #e6f2e9 !important;
+    --theme-body-color-alt: #b4cbbd !important;
+    --theme-sidebar-background: #17261f !important;
+    --theme-toolbar-background: #192624 !important;
+    --theme-toolbar-color: #e6f2e9 !important;
+    --theme-toolbar-selected-color: var(--forge-accent, #a4efce) !important;
+    --theme-tab-toolbar-background: #10191a !important;
+    --theme-selection-background: #294d3c !important;
+    --theme-selection-color: #f0faf3 !important;
+    --theme-splitter-color: #3b5146 !important;
+    --theme-comment: #91aa9b !important;
+    --theme-link-color: var(--forge-accent, #a4efce) !important;
+  }
+  .devtools-tab { border-radius: 8px 8px 0 0 !important; margin: 3px !important; }
+  .devtools-tab.selected { box-shadow: inset 0 -2px var(--forge-accent) !important; }
+}
+
+@-moz-document url-prefix("chrome://global/content/commonDialog.xhtml"),
+  url-prefix("chrome://global/content/selectDialog.xhtml"), url-prefix("chrome://global/content/print.html"),
+  url-prefix("chrome://browser/content/preferences/") {
+  dialog, .dialog-content { background: #192624 !important; color: #e6f2e9 !important; }
+  .dialog-button-box { padding: 18px !important; border-top: 1px solid #3b5146 !important; gap: 10px !important; }
+  button { border-radius: var(--forge-control-radius) !important; }
+}

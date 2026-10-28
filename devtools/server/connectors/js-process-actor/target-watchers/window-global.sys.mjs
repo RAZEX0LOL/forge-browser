@@ -1,3 +1,4 @@
+// Forge: ignore detached documents in page lifecycle notifications.
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -478,13 +479,13 @@ function observe(subject, topic) {
   } else if (topic == "content-page-shown" || topic == "chrome-page-shown") {
     // The observer service notification doesn't receive the "persisted" DOM Event attribute,
     // but thanksfully is fired just before the dispatching of that DOM event.
-    subject.defaultView.addEventListener("pageshow", handleEvent, {
+    subject.defaultView?.addEventListener("pageshow", handleEvent, {
       capture: true,
       once: true,
     });
   } else if (topic == "content-page-hidden" || topic == "chrome-page-hidden") {
     // Same as previous elseif branch
-    subject.defaultView.addEventListener("pagehide", handleEvent, {
+    subject.defaultView?.addEventListener("pagehide", handleEvent, {
       capture: true,
       once: true,
     });

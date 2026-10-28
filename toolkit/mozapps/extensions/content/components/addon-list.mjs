@@ -1,3 +1,4 @@
+import { icon as forgeIcon } from "chrome://browser/content/forge/Icons.sys.mjs";
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -218,6 +219,22 @@ export class AddonList extends HTMLElement {
   }
 
   createEmptyListMessage() {
+    // Forge: an empty installed list is not an advertising surface.
+    if (this.type === "extension") {
+      const section = document.createElement("section");
+      section.id = "forge-extensions-empty";
+      const icon = document.createElement("div");
+      icon.className = "forge-empty-icon";
+      icon.append(forgeIcon(document, "extension"));
+      icon.setAttribute("aria-hidden", "true");
+      const title = document.createElement("h2");
+      title.textContent = ChromeUtils.importESModule("chrome://browser/content/forge/Localization.sys.mjs").createStrings(window)("forge-extensions-empty");
+      const description = document.createElement("p");
+      description.textContent = ChromeUtils.importESModule("chrome://browser/content/forge/Localization.sys.mjs").createStrings(window)("forge-extensions-help");
+      section.append(icon, title, description);
+      return section;
+    }
+
     let emptyMessage = "list-empty-get-extensions-message";
     let linkPref = "extensions.getAddons.link.url";
 

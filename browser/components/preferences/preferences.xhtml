@@ -232,6 +232,19 @@
     <vbox class="main-content" flex="1" align="start">
       <vbox class="pane-container">
         <html:div id="search-container">
+          <!-- BEGIN FORGE SETTINGS -->
+          <html:header id="forge-settings-header">
+            <html:div class="forge-settings-eyebrow" data-forge-l10n="forge-settings-eyebrow">FORGE / НАСТРОЙКИ</html:div>
+            <html:h2 data-forge-l10n="forge-settings-title">Браузер под твоим контролем.</html:h2>
+            <html:p data-forge-l10n="forge-settings-description">Все настройки — без рекламных предложений.</html:p>
+            <html:nav aria-label="Разделы Forge" data-forge-l10n="forge-settings-navigation" data-forge-l10n-attr="aria-label">
+              <html:a href="about:policies" data-forge-l10n="forge-sidebar-policies">Политики приватности</html:a>
+              <html:a href="about:addons" data-forge-l10n="forge-command-addons">Расширения</html:a>
+              <html:a href="about:downloads" data-forge-l10n="forge-command-downloads">Загрузки</html:a>
+            </html:nav>
+          </html:header>
+<script src="chrome://browser/content/forge/localize.js"></script>
+          <!-- END FORGE SETTINGS -->
           <html:nav-notice
             id="policies-container-content"
             hidden="true"

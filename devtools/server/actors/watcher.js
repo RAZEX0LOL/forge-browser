@@ -1,3 +1,4 @@
+// Forge: drain watcher teardown before unregistering process actors.
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -204,11 +205,20 @@ exports.WatcherActor = class WatcherActor extends Actor {
     if (ParentProcessWatcherRegistry.getWatcher(this.actorID)) {
       // Emit one IPC message on destroy to all the processes
       const domProcesses = ChromeUtils.getAllDOMProcesses();
+      const pending = [];
       for (const domProcess of domProcesses) {
-        domProcess.getActor(this._jsActorName).destroyWatcher({
-          watcherActorID: this.actorID,
-        });
+        try {
+          pending.push(domProcess.getActor(this._jsActorName).destroyWatcher({
+            watcherActorID: this.actorID,
+          }));
+        } catch (error) {
+          // A content process may have already exited during tab/window closure.
+          if (error.name !== "InvalidStateError" && error.name !== "AbortError") {
+            throw error;
+          }
+        }
       }
+      ParentProcessWatcherRegistry.deferUnregisterUntil(Promise.allSettled(pending));
     }
 
     // Ensure destroying all Resource Watcher instantiated in the parent process

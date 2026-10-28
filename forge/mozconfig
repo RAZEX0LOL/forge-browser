@@ -1,0 +1,6 @@
+# Local development only. Artifact builds reuse Mozilla's compiled Gecko.
+# Use a full build, own branding and own update infrastructure before release.
+ac_add_options --enable-application=browser
+ac_add_options --enable-artifact-builds
+ac_add_options --enable-debug-js-modules
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-forge

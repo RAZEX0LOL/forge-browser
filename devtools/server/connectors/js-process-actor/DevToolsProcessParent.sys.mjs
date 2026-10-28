@@ -1,3 +1,4 @@
+// Forge: drain watcher teardown before unregistering process actors.
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -114,7 +115,7 @@ export class DevToolsProcessParent extends JSProcessActorParent {
   }
 
   destroyWatcher({ watcherActorID }) {
-    return this.sendAsyncMessage("DevToolsProcessParent:destroyWatcher", {
+    return this.sendQuery("DevToolsProcessParent:destroyWatcher", {
       watcherActorID,
     });
   }

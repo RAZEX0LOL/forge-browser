@@ -49,13 +49,22 @@
   </keyset>
 #endif
 
+  <html:header id="forge-downloads-header">
+    <html:div data-forge-l10n="forge-downloads-eyebrow">FORGE / ЗАГРУЗКИ</html:div>
+    <html:h1 data-forge-l10n="forge-downloads-title">Твои загрузки.</html:h1>
+    <html:p data-forge-l10n="forge-downloads-description">Файлы, прогресс и действия — в одном месте.</html:p>
+  </html:header>
+<script src="chrome://browser/content/forge/localize.js"></script>
   <richlistbox flex="1"
                seltype="multiple"
                id="downloadsListBox"
                class="allDownloadsListBox"
                context="downloadsContextMenu"/>
-  <description id="downloadsListEmptyDescription"
-               data-l10n-id="downloads-list-empty"/>
+  <html:section id="downloadsListEmptyDescription">
+    <html:div class="forge-empty-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg></html:div>
+    <html:h2 data-forge-l10n="forge-downloads-empty">Здесь будут твои файлы.</html:h2>
+    <html:p data-forge-l10n="forge-downloads-empty-help">Завершённые и текущие загрузки появятся в этом списке.</html:p>
+  </html:section>
 #include downloadsCommands.inc.xhtml
 #include downloadsContextMenu.inc.xhtml
 </window>

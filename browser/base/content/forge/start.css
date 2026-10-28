@@ -1,0 +1,31 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. https://mozilla.org/MPL/2.0/ */
+:root { color-scheme: dark; font: 14px/1.5 system-ui, sans-serif; background: var(--forge-canvas, #000); color: var(--forge-ink, #f0f0f0); }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+header, footer { padding: 28px 36px; }
+.wordmark { color: var(--forge-muted, #aaa); text-decoration: none; font-size: 17px; font-weight: 600; letter-spacing: -.05em; }
+main { width: min(560px, 82vw); margin: auto; padding: 40px 0 70px; text-align: center; }
+h1 { font-size: clamp(26px, 3vw, 38px); font-weight: 450; line-height: 1.2; letter-spacing: -.045em; margin: 0 0 28px; }
+form { display: flex; align-items: center; gap: 12px; padding: 8px 10px 8px 17px; border: 1px solid var(--forge-line, #303030); border-radius: 16px; background: var(--forge-surface, #080808); backdrop-filter: var(--forge-blur, none); transition: border-color var(--forge-motion-fast, 140ms) ease, box-shadow var(--forge-motion-fast, 140ms) ease; }
+form > span { display: flex; align-items: center; color: var(--forge-muted, #aaa); }
+form:focus-within { border-color: var(--forge-accent, #a4efce); box-shadow: 0 0 0 3px color-mix(in srgb, var(--forge-accent, #a4efce) 8%, transparent); }
+input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 12px 0; background: transparent; color: inherit; font: inherit; }
+input::placeholder { color: var(--forge-dim, #909090); }
+button { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 10px; background: transparent; color: var(--forge-muted, #aaa); cursor: pointer; transition: background-color var(--forge-motion-fast, 140ms) ease, transform var(--forge-motion-fast, 140ms) var(--forge-ease, ease); }
+button:hover { color: var(--forge-accent, #a4efce); background: var(--forge-raised, #141414); }
+button:active { transform: scale(.92); }
+.quick-links { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+.quick-links a { color: var(--forge-muted, #aaa); font-size: 12px; padding: 8px 12px; border-radius: 9px; text-decoration: none; transition: color var(--forge-motion-fast, 140ms) ease, background-color var(--forge-motion-fast, 140ms) ease, transform var(--forge-motion-fast, 140ms) var(--forge-ease, ease); }
+.quick-links a:hover { color: var(--forge-ink, #f0f0f0); background: var(--forge-raised, #141414); transform: translateY(-2px); }
+.search-note { color: var(--forge-dim, #909090); opacity: .7; font-size: 10px; margin-top: 22px; }
+footer { color: var(--forge-dim, #909090); opacity: .65; font-size: 10px; text-align: center; }
+:is(a, button):focus-visible { outline: 2px solid var(--forge-accent, #a4efce); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+h1, form, .quick-links, .search-note { animation: forge-start-enter var(--forge-motion-normal, 220ms) var(--forge-ease, ease) both; }
+form { animation-delay: calc(2 * var(--forge-stagger-step, 10ms)); }
+.quick-links { animation-delay: calc(4 * var(--forge-stagger-step, 10ms)); }
+.search-note { animation-delay: calc(6 * var(--forge-stagger-step, 10ms)); }
+@keyframes forge-start-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+@media (max-width: 600px) { header, footer { padding: 22px; } main { width: 86vw; } }

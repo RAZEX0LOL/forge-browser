@@ -2,6 +2,48 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 browser.jar:
+# BEGIN FORGE RESOURCES
+        content/browser/forge/forge.js (content/forge/forge.js)
+        content/browser/forge/Forge.sys.mjs (content/forge/Forge.sys.mjs)
+        content/browser/forge/core.sys.mjs (content/forge/core.sys.mjs)
+        content/browser/forge/forge.css (content/forge/forge.css)
+        content/browser/forge/forge.svg (content/forge/forge.svg)
+        content/browser/forge/Shell.sys.mjs (content/forge/Shell.sys.mjs)
+        content/browser/forge/Keyboard.sys.mjs (content/forge/Keyboard.sys.mjs)
+        content/browser/forge/TabTransfer.sys.mjs (content/forge/TabTransfer.sys.mjs)
+        content/browser/forge/Shortcuts.sys.mjs (content/forge/Shortcuts.sys.mjs)
+        content/browser/forge/NetworkAudit.sys.mjs (content/forge/NetworkAudit.sys.mjs)
+        content/browser/forge/Localization.sys.mjs (content/forge/Localization.sys.mjs)
+        content/browser/forge/localize.js (content/forge/localize.js)
+        content/browser/forge/locales/ru/forge.ftl (content/forge/locales/ru/forge.ftl)
+        content/browser/forge/locales/en-US/forge.ftl (content/forge/locales/en-US/forge.ftl)
+        content/browser/forge/start.html (content/forge/start.html)
+        content/browser/forge/start.css (content/forge/start.css)
+        content/browser/forge/DesignSystem.sys.mjs (content/forge/DesignSystem.sys.mjs)
+        content/browser/forge/design-tokens.sys.mjs (content/forge/design-tokens.sys.mjs)
+        content/browser/forge/design-system.css (content/forge/design-system.css)
+        content/browser/forge/ControlCenter.sys.mjs (content/forge/ControlCenter.sys.mjs)
+        content/browser/forge/hub.svg (content/forge/hub.svg)
+        content/browser/forge/vault.svg (content/forge/vault.svg)
+        content/browser/forge/Lifecycle.sys.mjs (content/forge/Lifecycle.sys.mjs)
+        content/browser/forge/Icons.sys.mjs (content/forge/Icons.sys.mjs)
+        content/browser/forge/Motion.sys.mjs (content/forge/Motion.sys.mjs)
+        content/browser/forge/Workspaces.sys.mjs (content/forge/Workspaces.sys.mjs)
+        content/browser/forge/StartChild.sys.mjs (content/forge/StartChild.sys.mjs)
+        content/browser/forge/StartParent.sys.mjs (content/forge/StartParent.sys.mjs)
+        content/browser/forge/Toolbar.sys.mjs (content/forge/Toolbar.sys.mjs)
+        content/browser/forge/Commands.sys.mjs (content/forge/Commands.sys.mjs)
+        content/browser/forge/Projects.sys.mjs (content/forge/Projects.sys.mjs)
+% override chrome://branding/content/icon16.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/icon32.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/icon48.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/icon64.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/icon128.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/about.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/about-logo.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/about-logo@2x.png chrome://browser/content/forge/forge.svg
+% override chrome://branding/content/about-logo.svg chrome://browser/content/forge/forge.svg
+# END FORGE RESOURCES
 %  content browser %content/browser/ contentaccessible=yes
 
         content/browser/aboutDialog-appUpdater.js     (content/aboutDialog-appUpdater.js)
