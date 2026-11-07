@@ -15,6 +15,9 @@ package_ignore = shutil.ignore_patterns("moz.build", ".purgecaches")
 
 def forge_metadata(data):
     result = dict(data)
+    # Firefox's asset-catalog AppIcon overrides CFBundleIconFile in Finder/Dock.
+    # Forge uses its own multi-resolution ICNS, not the upstream asset entry.
+    result.pop('CFBundleIconName', None)
     result.update(CFBundleName="Forge", CFBundleDisplayName="Forge",
                   CFBundleIdentifier="org.forgebrowser.development", CFBundleIconFile="forge.icns",
                   CFBundleExecutable="forge")
