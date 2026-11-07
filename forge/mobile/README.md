@@ -158,6 +158,23 @@ Real file-input, provider
 grant and server multipart workflows remain gates, not shipped capabilities.
 These later sources are not part of TestFlight build 5 or public packages.
 
+Further local E2E work exercised a real HTML file input, native confirmation,
+Android DocumentsUI and a loopback HTTPS multipart receiver. The exact 28-byte
+binary fixture and filename matched in regular/private uploads. This exposed an
+unnecessary rewrite of the unchanged regular snapshot during private actions;
+the fix preserves its bytes/inode/mtime and passed a new lifecycle regression
+plus the complete Android suite (64 native, 43 unit). Both untrusted-CA and
+same-CA wrong-host certificate controls failed closed. Test trust is confined to
+a new upload-only Gecko profile, never production settings or personal profiles.
+Final recheck passed all three cases and counts every POST attempt, including
+rejected bodies; cancellation made no POST attempt.
+An iOS27 Files-panel test opened the real picker but failed a Browse-title
+selector; the corrected picker-scoped selector remains a local/uncommitted
+experiment after load-blocked preflights and a harness-interrupted run. It is
+not part of this accepted Android source delta. Installed runtimes do not allow
+exact iOS17/18.4 acceptance. This is still isolated fixture evidence, not arbitrary
+provider/real-device or daily-use readiness.
+
 Android OS-link entry subsequently passed49/49 native +31/31 unit, plus two startup
 controls; lint only OldTargetApi. The launch filter identity is retained for
 framework lifecycle/restoration, while extras/ClipData/selector/grants are stripped;

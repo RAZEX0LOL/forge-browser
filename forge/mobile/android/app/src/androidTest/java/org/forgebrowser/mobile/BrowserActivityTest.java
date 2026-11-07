@@ -165,6 +165,40 @@ public final class BrowserActivityTest {
         new BrowserSessionStore(context.getNoBackupFilesDir()).save(new BrowserTabs());
     }
 
+    @Test public void unchangedRegularSnapshotKeepsBytesInodeAndMtimeThroughoutPrivateLifecycle() throws Exception {
+        byte[] original = Files.readAllBytes(sessionFile.toPath());
+        long inode = android.system.Os.stat(sessionFile.getPath()).st_ino;
+        java.nio.file.attribute.FileTime modified = Files.getLastModifiedTime(sessionFile.toPath());
+        try (ActivityScenario<BrowserActivity> scenario = ActivityScenario.launch(BrowserActivity.class)) {
+            scenario.onActivity(activity -> {
+                activity.setPrivateBrowsing(true);
+                assertTrue(activity.addTab());
+                GeckoSession page = ((GeckoView)activity.getWindow().getDecorView().findViewWithTag("forge-browser")).getSession();
+                page.getNavigationDelegate().onLocationChange(page, "https://private-snapshot-fixture.invalid/", java.util.Collections.emptyList(), false);
+                page.getContentDelegate().onTitleChange(page, "Private fixture");
+                assertTrue(activity.addTab());
+            });
+            assertSessionFileUnchanged(original, inode, modified);
+            scenario.recreate();
+            assertSessionFileUnchanged(original, inode, modified);
+            scenario.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
+            assertSessionFileUnchanged(original, inode, modified);
+            scenario.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
+            scenario.onActivity(activity -> {
+                assertTrue(activity.isPrivateBrowsing());
+                activity.setPrivateBrowsing(false);
+                assertTrue(activity.addTab());
+            });
+            assertFalse("Real regular edits must still be persisted", java.util.Arrays.equals(original, Files.readAllBytes(sessionFile.toPath())));
+        }
+    }
+
+    private void assertSessionFileUnchanged(byte[] data, long inode, java.nio.file.attribute.FileTime modified) throws Exception {
+        assertArrayEquals(data, Files.readAllBytes(sessionFile.toPath()));
+        assertEquals("Private lifecycle must not replace the regular file", inode, android.system.Os.stat(sessionFile.getPath()).st_ino);
+        assertEquals("Private lifecycle must not rewrite the regular file", modified, Files.getLastModifiedTime(sessionFile.toPath()));
+    }
+
     @After public void restoreSessionFixture() throws Exception {
         if (sessionFile == null) return;
         if (previousSession != null) Files.write(sessionFile.toPath(), previousSession);

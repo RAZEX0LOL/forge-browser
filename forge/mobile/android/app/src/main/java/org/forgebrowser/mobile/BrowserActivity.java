@@ -93,6 +93,7 @@ public final class BrowserActivity extends Activity {
         boolean privateBrowsing;
         final Map<String, TabRuntime> pages = new HashMap<>();
         boolean persistenceEnabled = true;
+        String lastPersistedRegularSession;
         BrowserDownloads downloads;
         boolean savePickerOpen;
     }
@@ -258,7 +259,10 @@ public final class BrowserActivity extends Activity {
         if (retained == null) {
             try {
                 BrowserTabs saved = sessionStore.load();
-                if (saved != null) { state.tabs = saved; state.regularTabs = saved; }
+                if (saved != null) {
+                    state.tabs = saved; state.regularTabs = saved;
+                    state.lastPersistedRegularSession = saved.encode();
+                }
             } catch (IOException | JSONException error) { state.persistenceEnabled = false; }
         }
         for (Map.Entry<String, TabRuntime> item : state.pages.entrySet()) bind(item.getKey(), item.getValue());
@@ -342,7 +346,12 @@ public final class BrowserActivity extends Activity {
 
     private void persistSession() {
         if (!state.persistenceEnabled) return;
-        try { sessionStore.save(state.regularTabs); }
+        try {
+            String encoded = state.regularTabs.encode();
+            if (encoded.equals(state.lastPersistedRegularSession)) return;
+            sessionStore.save(state.regularTabs);
+            state.lastPersistedRegularSession = encoded;
+        }
         catch (IOException | JSONException error) {
             state.persistenceEnabled = false;
             showStatus(statusResource);

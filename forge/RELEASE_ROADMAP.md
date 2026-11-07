@@ -7,6 +7,45 @@ the redesigned iPhone interface and later privacy work are not in that build.
 
 ## Cross-platform daily-use gates (2026-11-01)
 
+### Real upload-form follow-up (2026-11-07; local, after `7bae3ebde0f`)
+
+The dedicated upload AVD now exercises a real HTML file input, native consent,
+Android DocumentsUI selection and HTTPS multipart POST. The fixed 28-byte binary
+fixture is validated by exact name/bytes/SHA-256. A one-day CA is confined to the
+new isolated Gecko profile; both untrusted-CA and wrong-IP-SAN controls reject
+the connection. No production trust/TLS settings or personal profiles changed.
+
+Preserved `forge-mobile-upload-e2e-20261107-android-v1` evidence includes a native
+uppercase-selector failure, an incomplete NSS DB transfer (cert9 without the
+modified key4) and a real private-storage invariant failure. Private POST bytes
+were correct, but unchanged regular-session contents were rewritten, changing
+inode/mtime. The fix skips unchanged regular encodings and retains the last
+successful marker across Activity recreation. The strict assertions were kept.
+Its deterministic regression passed 1/1 with a positive regular-write control;
+the complete `forge-mobile-private-snapshot-20261107-android-v2-full` passed native
+64/64 and unit 43/43, lint only OldTargetApi. APK SHA-256:
+`ff2350deef8ff8bdebd378a742720eb6fed744df93a03202776afdd62c7ad250`.
+
+Corrected E2E `android-v2` passed regular, cancellation and private cases; session
+and library bytes/inode/mtime remained identical during private upload. Final
+recheck `forge-mobile-upload-e2e-20261107-android-v3` strengthened the cancellation
+oracle to count **all** POST attempts, including rejected requests, instead of
+accepted receipts alone; all three cases passed with the same APK hash.
+Python source checks passed 106/106, Node 56/56, compileall and whitespace checks.
+The isolated iOS27 default-panel check FAILED 0/1 after successfully opening the
+real Files picker: a Browse-title selector did not match its Recents view. The
+saved AX hierarchy identifies the actual picker/navigation bar; the corrected
+test scopes Cancel to those elements and keeps all original assertions/deadlines.
+Its next preflight was blocked by host load before simulator creation/build.
+The v3 test was then interrupted by a harness/server restart, with an unfinished
+xcresult and no test result; its owned orphaned simulator was shut down. A v4
+launch was again load-blocked (follow-up receipt: 14.05 on eight logical CPUs).
+The corrected iOS UI scheme/test remains local and uncommitted, separate from
+the accepted Android delta. Failed, blocked and interrupted evidence is retained.
+Exact iOS17/18.4 runtime validation is blocked by unavailable runtimes;
+support target remains 17 and no custom open-panel interception is claimed.
+No newer TestFlight build, public package or deployment was authorized or made.
+
 ### Forms/upload staging checkpoint (2026-11-07; local, not a release)
 
 Latest follow-up: iOS local-form checks passed 3/3 in ru and 3/3 in en under

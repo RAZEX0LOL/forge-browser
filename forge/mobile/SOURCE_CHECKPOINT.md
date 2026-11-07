@@ -9,13 +9,14 @@ release publication, website deployment or Apple capability request.
 
 | Scope | Latest completed evidence |
 | --- | --- |
-| Source checks | Node 56/56; Python 98/98; Python compilation and diff whitespace checks passed |
+| Source checks | Node 56/56; Python 106/106; Python compilation and diff whitespace checks passed |
 | iOS current production sources | Native 64/64 per language and UI 9/9 per language, 146 executions across separate ru/en native/UI runs |
 | Android previous stage-4a snapshot | Native 41/41, unit 27/27; lint only OldTargetApi |
 | Android current OS-link-entry delta | Native 49/49, unit 31/31, plus separate startup controls 2/2; lint only OldTargetApi. Earlier failures remain preserved |
 | Android local staging/navigation delta | Native 53/53, unit 40/40; targeted regression 2/2; lint only OldTargetApi. Picker not integrated |
 | iOS local form-test delta | Targeted 3/3 per language (ru/en), six executions; no destination POST sent |
 | Android experimental picker delta | Native 63/63, unit 43/43; targeted controller/lifecycle 10/10; lint only OldTargetApi |
+| Android later private-snapshot fix | Native 64/64, unit 43/43; strict private bytes/inode/mtime regression plus real regular-write control |
 
 iOS accepted evidence: `forge-mobile-new-tab-links-20261107-ios-v3` (native) and
 `forge-mobile-new-tab-links-20261107-ios-v4` (UI-only test delta). Android stage-4a:
@@ -47,6 +48,54 @@ Earlier failed runs remain preserved; the chronological record is in
   group preservation, bounded ephemeral pending URL and pause/recreation cleanup.
 
 ## Remaining gates
+
+### End-to-end upload follow-up (local, after `7bae3ebde0f`)
+
+A fresh upload-only AVD (`ForgeUpload20261107`, port 5584) exercised a real HTTPS
+HTML file input, Forge confirmation, Android DocumentsUI selection and multipart
+POST. The fixed 28-byte payload includes NUL/non-UTF8 bytes; the receiver checks
+the exact filename and SHA-256. TLS uses a one-day CA trusted only by this new
+Gecko profile. An untrusted-CA control and a same-CA wrong-IP-SAN control both
+failed closed; production certificate handling is unchanged.
+
+The initial `forge-mobile-upload-e2e-20261107-android-v1` preserved two harness
+failures (uppercase native-button selector and incomplete NSS DB transfer), then
+passed regular upload/cancellation but FAILED private storage invariants: regular
+session bytes were unchanged, yet its inode/mtime changed. `persistSession()`
+unconditionally rewrote the regular snapshot on private actions and picker
+backgrounding. It now skips unchanged regular encodings, retaining its marker
+across Activity recreation and updating it only after a successful save.
+
+The deterministic private lifecycle regression passed 1/1, including inode/mtime
+checks across recreation/background and a real regular-edit save control. The
+complete `forge-mobile-private-snapshot-20261107-android-v2-full` snapshot passed
+native 64/64, unit 43/43 and lint with only OldTargetApi. APK SHA-256:
+`ff2350deef8ff8bdebd378a742720eb6fed744df93a03202776afdd62c7ad250`.
+The corrected `android-v2` E2E snapshot passed regular, cancellation and private
+cases with unchanged private-session/library bytes/inode/mtime. A final E2E
+recheck `forge-mobile-upload-e2e-20261107-android-v3` counts every POST attempt,
+including rejected bodies, rather than only accepted receipts; it passed all
+three cases with the same APK hash. No POST attempt occurred on cancellation.
+
+Source checks passed Python 106/106, Node 56/56, compileall and whitespace checks
+(`forge-upload-e2e-20261107-source-v1`). A separate manual-only iOS upload UI
+scheme remains a local, uncommitted experiment for default WebKit Files-panel
+cancellation, separate from this accepted Android source delta. The first
+`forge-mobile-upload-e2e-20261107-ios-v1` run FAILED 0/1 after opening the actual
+Files panel: its selector expected a Browse navigation title, but Files exported
+`Browse View (Picker)` with `FullDocumentManagerViewControllerNavigationBar` and
+the Recents tab selected. The selector now targets that real picker and its
+scoped Cancel button, retaining panel/cancellation/no-POST assertions and all
+timeouts. The next `ios-v2` attempt was blocked by host load before simulator
+creation or xcodebuild; it is not a test result. The `ios-v3` run was interrupted
+by a harness/server restart after test start; its xcresult has no final Info.plist
+and is not accepted. Its orphaned owned simulator was shut down after confirming
+that no fixture/xcodebuild worker remained. A v4 launch was load-blocked before
+root/simulator creation (follow-up load receipt: 14.05 on eight logical CPUs).
+Failed attachments/video, interrupted bundles and blocked receipts remain
+preserved. Available
+runtimes are 26.0/26.4/27.0/27.1, not 17 or 18.4; no runtime was downloaded, no
+deployment target was raised and no custom iOS upload guard is claimed.
 
 ### Experimental picker integration — local automated scope
 
