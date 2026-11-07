@@ -96,3 +96,30 @@ the new helper. macOS bootstrap signing/notarization and signed replacement
 acceptance are separate gates; Windows/Linux installation remains disabled until
 their native implementation and validation exist. Merely hosting files is not a
 working desktop auto-updater.
+
+### Published macOS ARM64 bootstrap — 2026-11-08
+
+The accepted bootstrap is build **2026110802**, not the earlier blocked v3.
+Download:
+`https://razex.shop/forge/downloads/Forge-development-20261108-v2-updater-macos-arm64-notarized.zip`.
+It is 168,733,014 bytes, SHA-256
+`c3560f04b0565584244638ed5cb328a264664e81286ccd2390c8cf49bc3c3045`,
+source `8eb6bf35596b54828c5f844c3566eb492e236e6d`, notarization
+`361167e9-2e0c-4998-95da-985f24f102c1`. Developer ID, stapled ticket, Gatekeeper
+and 285 signed native-launcher browser checks passed. Minimum macOS13 is declared;
+the exact macOS13 browser runtime and a complete newer-version GUI upgrade are
+not claimed as tested. macOS15 CI covers the helper, not a full browser install.
+
+Endpoint: `https://razex.shop/forge/updates/desktop-macos-arm64.json`.
+Sequence 1 expires **2026-11-20 21:40:59 UTC**. It uses the same offline release
+key as Android, with strict desktop channel/package/target separation.
+Install this first ZIP manually; thereafter use the control center's
+**Check for Forge updates**. Installation is never silent and requires fully
+quitting Forge. Signed owned-copy replacement, retained backup, outside-app
+canary preservation, actual Firefox process guarding and child survival across
+normal browser shutdown passed. The native Go client also verified the live
+HTTPS channel using its real pinned key and current clock. This does not stand
+in for automation of the real consent dialogs or a different-version GUI install.
+
+Windows, Linux and Intel remain manual-download-only here; no feeds or claimed
+native replacement support were fabricated for those targets.

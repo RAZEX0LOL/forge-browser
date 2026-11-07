@@ -1,13 +1,16 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-11-07",
+  "asOf": "2026-11-08",
   "repository": "https://github.com/RAZEX0LOL/forge-browser",
-  "release": "v0.1.0-dev.20261028-multiplatform",
+  "release": "development-server-channels-20261108",
+  "legacyGitHubRelease": "v0.1.0-dev.20261028-multiplatform",
   "status": "Development software. No supported automatic security-update service.",
   "packageSnapshotDate": "2026-10-28",
   "androidCurrentPackageDate": "2026-11-07",
+  "macosCurrentPackageDate": "2026-11-08",
   "sourceCheckpoint": "9ed729458ba9a5746d2bfcc257b1a2dc56c4100d",
   "androidUpdateChannel": {"url": "updates/android-development.json", "mode": "manual-check-and-OS-confirmed-install", "signing": "RSA-3072/SHA-256 manifest, existing debug APK identity", "bootstrapVersionCode": 2, "supportedABIs": ["arm64-v8a"], "securityUpdateSLA": false},
+  "desktopUpdateChannels": {"macos-arm64": {"url": "updates/desktop-macos-arm64.json", "buildNumber": 2026110802, "mode": "manual-check-confirmed-full-package-replacement", "firstInstallManual": true, "securityUpdateSLA": false}, "notEnabledTargets": ["macos-intel", "windows-x64", "windows-arm64", "linux-x64", "linux-arm64"]},
   "iosTestFlight": {"version": "0.1.0", "build": "6", "processingState": "VALID", "internalBuildState": "IN_BETA_TESTING", "externalBuildState": "BETA_APPROVED", "publicLink": "https://testflight.apple.com/join/4hvp4sk8", "publicGroupIncludesBuild": true, "nativeTestsPerLanguage": 67, "uiTestsPerLanguage": 9, "languages": ["ru", "en"], "defaultFilesCancellationTests": 1, "physicalDevicesValidated": false},
   "builds": [
     {
@@ -45,6 +48,23 @@
     },
     {
       "target": "macos-arm64",
+      "file": "Forge-development-20261108-v2-updater-macos-arm64-notarized.zip",
+      "url": "downloads/Forge-development-20261108-v2-updater-macos-arm64-notarized.zip",
+      "sha256": "c3560f04b0565584244638ed5cb328a264664e81286ccd2390c8cf49bc3c3045",
+      "bytes": 168733014,
+      "sourceCommit": "8eb6bf35596b54828c5f844c3566eb492e236e6d",
+      "buildNumber": 2026110802,
+      "signing": "Developer ID Application, Hardened Runtime, Apple notarized, ticket stapled",
+      "notarySubmission": "361167e9-2e0c-4998-95da-985f24f102c1",
+      "signedBrowserChecks": 285,
+      "nativeRussianLocalePackaged": true,
+      "minimumMacOS": "13.0",
+      "macOS13RuntimeTested": false,
+      "fullNewerVersionGUIUpgradeTested": false,
+      "limitation": "Development manual-update channel. First bootstrap installation is manual. Full newer-version GUI confirmation flow and exact macOS13 runtime remain unverified; no security-update SLA."
+    },
+    {
+      "target": "macos-arm64-20261028",
       "file": "Forge-development-20261028-macos-arm64-notarized.zip",
       "url": "downloads/Forge-development-20261028-macos-arm64-notarized.zip",
       "sha256": "c90f8d5e32e5ace6887a2a464c2f5078f7b7cc7cc1b485fad231d0f3d611d776",

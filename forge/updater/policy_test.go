@@ -76,6 +76,40 @@ func TestReleaseKeyMatchesAndroidPinnedKey(t *testing.T) {
 	}
 }
 
+func TestPublishedDesktopEnvelopeMatchesReleaseKey(t *testing.T) {
+	envelope, err := os.ReadFile("../site/updates/desktop-macos-arm64.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var signed struct {
+		Payload string `json:"payload"`
+	}
+	if err := json.Unmarshal(envelope, &signed); err != nil {
+		t.Fatal(err)
+	}
+	payload, err := base64.StdEncoding.DecodeString(signed.Payload)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var recorded desktopManifest
+	if err := json.Unmarshal(payload, &recorded); err != nil {
+		t.Fatal(err)
+	}
+	key, err := base64.StdEncoding.DecodeString(publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// A reproducible historical signature vector; runtime expiry/future rejection
+	// is tested separately and the real updater always uses time.Now().
+	manifest, file, err := verifyManifest(envelope, time.Unix(recorded.Issued+1, 0), 0, "macos-arm64", key)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if manifest.BuildNumber != 2026110802 || file.SHA256 != "c3560f04b0565584244638ed5cb328a264664e81286ccd2390c8cf49bc3c3045" {
+		t.Fatal("unexpected published bootstrap")
+	}
+}
+
 func TestSignedManifestAndTampering(t *testing.T) {
 	manifest, key, der := fixture(t)
 	envelope := signedFixture(t, manifest, key)

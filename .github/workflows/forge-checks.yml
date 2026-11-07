@@ -46,5 +46,5 @@ jobs:
           cache: false
       - run: go test -race -p 1 ./...
         working-directory: forge/updater
-      - run: python3 updater/build_macos.py --arch "$(go env GOARCH)" --build-number 2026110801 --output "$RUNNER_TEMP/forge-update"
+      - run: python3 updater/build_macos.py --arch "$(go env GOARCH)" --build-number 2026110802 --output "$RUNNER_TEMP/forge-update"
       - run: '"$RUNNER_TEMP/forge-update" --version'

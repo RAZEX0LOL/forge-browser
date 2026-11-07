@@ -55,11 +55,11 @@ Rollback means pointing that symlink to the previous retained release; for an
 initial deployment, remove only the newly added include and reload after testing.
 Keep backups and pre-existing files; do not delete unrelated server content.
 
-## Current deployment — 2026-11-07
+## Current deployment — 2026-11-08
 
-Release `20261107-updates-landing-v5` is active; earlier releases remain retained.
+Release `20261108-macos-updates-v6` is active; earlier releases remain retained.
 Ten static files were byte-verified over HTTPS after the atomic symlink swap.
-Four local downloads passed full server-side hashes and HTTP HEAD checks;
+Five local downloads passed full server-side hashes and HTTP HEAD checks;
 the root and both Matrix discovery responses stayed unchanged. No nginx config
 change or reload was needed. Existing unrelated IPv6 nginx warning remains.
 
@@ -69,8 +69,15 @@ remain unchanged. First v2 install is manual; later checks: Menu → Forge updat
 `updates/` points to the shared signed channel directory; never deploy the signing
 key. See `../UPDATE_CHANNEL.md` for expiry, renewal and acceptance. The immutable
 `.bin` fixture preserves native HTTPS regression checks independently of changing
-release metadata. The preview passed a 390-pixel layout check without overflow;
-desktop and legacy mobile packages remain historical October snapshots.
+release metadata. The preview passed 390-pixel checks for all four platform panels
+without overflow. Mac ARM64 build 2026110802 is separately signed/notarized, with
+285 native-launcher checks and a signed full-package channel. First installation
+is manual; newer-version GUI upgrade and exact macOS13 runtime are not claimed
+as fully tested. Legacy Mac/Windows/Linux/mobile archives remain October snapshots.
+Windows/Linux/Intel updater installation is not enabled by this publication.
+Both signed feed responses and root/Matrix discovery stayed byte-identical during
+the landing-page swap; no nginx change/reload was needed. Renew feeds before their
+dated expiry with higher signed sequences; there is no automatic signing cron.
 TestFlight 0.1.0 (6) is VALID/BETA_APPROVED and assigned to the enabled public group:
 https://testflight.apple.com/join/4hvp4sk8. Status is dated and manually updated.
 Developer archives are not installable iPhone IPAs. Do not publish private App

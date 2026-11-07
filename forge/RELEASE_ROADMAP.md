@@ -83,6 +83,25 @@ name/state fallback when both libproc path and identity are restricted. It never
 reads argv or ignores unidentified live processes; existing guard assertions
 remain intact. Fresh CI and a newly numbered/signed candidate are required.
 
+The correction passed independent macOS15 CI:
+https://github.com/RAZEX0LOL/forge-browser/actions/runs/42415556868.
+Candidate v4 uses a new build number 2026110802 and immutable ZIP filename;
+the blocked v3 archive remains private staging and was not overwritten.
+v4 passed 285 ad-hoc and 285 Developer ID signed native-launcher browser checks,
+notarization `361167e9-2e0c-4998-95da-985f24f102c1`, stapling and Gatekeeper.
+Its notarized owned-copy replacement, actual Firefox process guard and updater-
+style child lifetime controls passed, with no personal application/profile used.
+The native Go client verified the actual public signed feed over standard HTTPS
+with the current clock and pinned key. Full newer-version GUI consent/install
+and exact macOS13 runtime remain unverified, not silently promoted to passes.
+
+Published ZIP: `Forge-development-20261108-v2-updater-macos-arm64-notarized.zip`,
+168,733,014 bytes; SHA-256
+`c3560f04b0565584244638ed5cb328a264664e81286ccd2390c8cf49bc3c3045`.
+Source: `8eb6bf35596b54828c5f844c3566eb492e236e6d`. First public macOS channel
+sequence 1 expires 2026-11-20 21:40:59 UTC; renewal remains offline/manual.
+Windows/Linux/Intel installation is not enabled by this ARM64 bootstrap.
+
 ### New release/site authorization and build-6 QA (2026-11-07)
 
 The owner explicitly authorized all source pushes, a new TestFlight release and

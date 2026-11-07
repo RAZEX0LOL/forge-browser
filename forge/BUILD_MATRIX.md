@@ -1,5 +1,11 @@
 # Native build matrix
 
+Current server-update bootstrap support is **Android ARM64 v2** and **Mac ARM64
+2026110802**, separate from the historical matrix below. First install is manual;
+later checks fetch signed metadata from razex.shop. Windows/Linux/Intel updater
+installation remains disabled pending their own native work. See
+`UPDATE_CHANNEL.md` for exact acceptance, expiry and limits; no security-update SLA.
+
 > Historical public artifact matrix (2026-10-28). Later Developer ID signing,
 > notarization and public TestFlight build 6 are tracked in
 > `APPLE_SIGNING.md` and `RELEASE_ROADMAP.md`; the original unsigned/ad-hoc

@@ -28,7 +28,7 @@ class SiteTests(unittest.TestCase):
         self.assertRegex(manifest['sourceCheckpoint'], r'^[a-f0-9]{40}$')
         self.assertIn('id="status"', text)
         self.assertIn('Исходники, пакеты и TestFlight — разные снимки.', text)
-        self.assertIn('Desktop и архивные мобильные пакеты — снимки 28 октября.', text)
+        self.assertIn('Архивные desktop и мобильные пакеты — снимки 28 октября.', text)
         ios = manifest['iosTestFlight']
         self.assertIn(ios['version'] + ' (' + ios['build'] + ')', text)
         self.assertEqual(ios['processingState'], 'VALID')
@@ -42,8 +42,8 @@ class SiteTests(unittest.TestCase):
         manifest = json.loads((SITE / 'downloads.json').read_text())
         builds = manifest['builds']
         targets = {b['target']: b for b in builds}
-        self.assertEqual(len(targets), 13)
-        self.assertEqual(len({b['file'] for b in builds}), 13)
+        self.assertEqual(len(targets), 14)
+        self.assertEqual(len({b['file'] for b in builds}), 14)
         links = [attrs for tag, attrs in Page((SITE / 'index.html').read_text()).tags
                  if tag == 'a' and 'data-target' in attrs]
         self.assertEqual({a['data-target'] for a in links}, set(targets))
@@ -80,6 +80,23 @@ class SiteTests(unittest.TestCase):
         self.assertTrue((SITE / manifest['androidUpdateChannel']['url']).is_file())
         self.assertFalse(manifest['androidUpdateChannel']['securityUpdateSLA'])
         self.assertEqual(manifest['androidCurrentPackageDate'], '2026-11-07')
+
+    def test_macos_updater_bootstrap_keeps_legacy_and_platform_limits(self):
+        manifest = json.loads((SITE / 'downloads.json').read_text())
+        targets = {item['target']: item for item in manifest['builds']}
+        current, old = targets['macos-arm64'], targets['macos-arm64-20261028']
+        self.assertNotEqual(current['file'], old['file'])
+        self.assertEqual(current['buildNumber'], 2026110802)
+        self.assertEqual(current['signedBrowserChecks'], 285)
+        self.assertIn('Apple notarized', current['signing'])
+        self.assertEqual(current['minimumMacOS'], '13.0')
+        self.assertFalse(current['macOS13RuntimeTested'])
+        self.assertFalse(current['fullNewerVersionGUIUpgradeTested'])
+        channel = manifest['desktopUpdateChannels']['macos-arm64']
+        self.assertFalse(channel['securityUpdateSLA'])
+        self.assertTrue((SITE / channel['url']).is_file())
+        self.assertIn('windows-x64', manifest['desktopUpdateChannels']['notEnabledTargets'])
+        self.assertIn('linux-x64', manifest['desktopUpdateChannels']['notEnabledTargets'])
 
     def test_site_has_no_remote_passive_resources_inline_scripts_or_forms(self):
         for name in ('index.html', 'privacy.html'):

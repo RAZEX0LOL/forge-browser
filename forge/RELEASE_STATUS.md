@@ -1,5 +1,12 @@
 # Distribution status — 2026-10-28
 
+Current separately dated bootstraps: Android ARM64 versionCode 2 and Developer ID
+signed/notarized Mac ARM64 build 2026110802 at https://razex.shop/forge/.
+Both have manually operated signed update channels; original artifact filenames
+remain unchanged. See `UPDATE_CHANNEL.md` for source/hash evidence, expiry,
+bootstrap instructions and platform gates. This does not enable Windows/Linux/
+Intel replacement or replace iOS TestFlight distribution.
+
 > This is the historical public-release snapshot, not the latest local capability
 > inventory. macOS packages were subsequently Developer ID signed/notarized and
 > TestFlight 0.1.0 (6) is VALID/BETA_APPROVED under separate authorization.

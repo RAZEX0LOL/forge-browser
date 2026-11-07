@@ -10,7 +10,7 @@ Requires Go 1.27.3, Xcode command-line tools and the matching macOS SDK:
 
 ```sh
 python3.12 forge/updater/build_macos.py --arch arm64 \
-  --build-number 2026110801 --output /private/staging/bin/forge-update
+  --build-number 2026110802 --output /private/staging/bin/forge-update
 python3.12 forge/scripts/package_macos.py --source /private/firefox-worktree \
   --output /private/staging/adhoc/Forge.app \
   --native-locale-stage /private/staging/native-ru \

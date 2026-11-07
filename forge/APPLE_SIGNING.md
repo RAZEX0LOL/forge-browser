@@ -1,5 +1,17 @@
 # Apple signing
 
+## Server-updater Mac ARM64 bootstrap (2026-11-08)
+
+Build 2026110802 is Developer ID signed, Apple-notarized and stapled; Gatekeeper
+and 285 checks through the signed native launcher passed. Artifact provenance,
+immutable filename/hash, expiry and limitations are in `UPDATE_CHANNEL.md`.
+The v3 candidate was not published after an independent macOS15 process-guard
+failure; v4 contains the read-only kernel identity fallback and passed that CI.
+No new signing capability, key export or privileged installation helper was used.
+Minimum macOS13 is declared, not proof of exact macOS13 runtime acceptance.
+
+## Historical signing notes
+
 > The local-results section below is a historical 2026-10-28 snapshot. The app
 > record was subsequently created. TestFlight 0.1.0 (6) is now VALID and
 > BETA_APPROVED, assigned to https://testflight.apple.com/join/4hvp4sk8 under
