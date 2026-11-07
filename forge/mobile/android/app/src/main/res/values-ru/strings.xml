@@ -100,4 +100,17 @@
     <string name="permission_allow">Разрешить</string>
     <string name="permission_continue">Продолжить</string>
     <string name="permission_unsupported">Это разрешение сайта пока не поддерживается. Доступ запрещён.</string>
+    <string name="update_title">Обновления Forge</string>
+    <string name="update_privacy">Проверить подписанное development-обновление на razex.shop? Сервер получит IP-адрес и запрос проверки; вкладки, cookies и история не передаются. Проверка только вручную. Канал сохраняет прежнюю debug-подпись, а не production-ключ.</string>
+    <string name="update_check">Проверить</string>
+    <string name="update_checking">Проверка подписанного манифеста…</string>
+    <string name="update_current">Более нового совместимого обновления нет.</string>
+    <string name="update_offer">Версия %1$s · около %2$d МиБ. Скачать через текущее подключение? Установка потребует отдельного подтверждения.</string>
+    <string name="update_download">Скачать</string>
+    <string name="update_downloading">Скачивание и проверка APK…</string>
+    <string name="update_verified">Проверены хеш, размер, пакет, повышение версии и совпадение сертификата подписи. Открыть установщик Android? Профиль не будет удалён.</string>
+    <string name="update_install">Открыть установщик</string>
+    <string name="update_permission">Android требует разрешение на установку обновлений из Forge. Можно включить его в системных настройках, затем вернуться и повторить проверку. Защиты не обходятся. После установки разрешение можно отключить.</string>
+    <string name="update_settings">Открыть настройки ОС</string>
+    <string name="update_failed">Не удалось проверить или скачать обновление. Ничего не установлено. Проверь подключение и часы устройства, затем заново открой диалог. Не удаляй Forge ради обхода конфликта подписей.</string>
 </resources>

@@ -904,6 +904,8 @@ public final class BrowserActivity extends Activity {
         tabDialog.show();
     }
 
+    private BrowserUpdates updates;
+
     private void showMenu() {
         if (clearingSiteData) return;
         permissions.cancel();
@@ -926,6 +928,10 @@ public final class BrowserActivity extends Activity {
             labels.add(getString(R.string.find_in_page)); actions.add(this::showFindInPage);
         }
         labels.add(getString(R.string.site_data_clear)); actions.add(this::requestClearSiteData);
+        labels.add(getString(R.string.update_title)); actions.add(() -> {
+            if (updates == null) updates = new BrowserUpdates(this);
+            updates.show();
+        });
         tabDialog = new AlertDialog.Builder(this).setTitle(R.string.browser_menu)
             .setItems(labels.toArray(new String[0]), (dialog, index) -> actions.get(index).run())
             .setNegativeButton(android.R.string.cancel, null).create();
@@ -1078,6 +1084,7 @@ public final class BrowserActivity extends Activity {
         super.onPause();
     }
     @Override public void onStop() {
+        if (updates != null) { updates.dispose(); updates = null; }
         foreground = false;
         linkActionVersion++;
         closeFindInPage();

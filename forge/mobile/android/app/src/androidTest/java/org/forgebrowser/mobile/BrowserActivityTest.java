@@ -66,7 +66,10 @@ public final class BrowserActivityTest {
             try (java.io.InputStream input = response.body) {
                 DownloadPolicy.copy(input, bytes, -1, () -> false, count -> {});
             }
-            assertEquals(1266, bytes.size());
+            // Exact published November manifest; October had 1266 bytes.
+            assertEquals(1375, bytes.size());
+            assertEquals("21486630d569d9887c7df066dfd85a6a1b1ccbdf5ec2d6f513d77baa6e50fc1f",
+                UpdatePolicy.hex(java.security.MessageDigest.getInstance("SHA-256").digest(bytes.toByteArray())));
             assertTrue(bytes.toString("UTF-8").contains("Forge"));
         } finally {
             WebResponse response = external.get();

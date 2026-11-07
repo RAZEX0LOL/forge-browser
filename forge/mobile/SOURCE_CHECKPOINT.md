@@ -31,6 +31,24 @@ either binary. Older packages and failed/interrupted evidence remain preserved.
 
 ## Validation scope
 
+### Android server-updater candidate (later 2026-11-07)
+
+VersionCode 2 keeps the published v1 APK certificate and adds manual signed-feed
+checks via razex.shop. Frozen `forge-updates-20261107-android-v1` passed 55 unit
+and 66 native tests; lint reports only OldTargetApi. The HTTPS download regression
+now checks the exact November checksum file (1375 bytes and SHA-256), replacing
+the obsolete October length rather than removing the assertion. The earlier
+permission-allowlist source failure was addressed with the exact expanded list
+and non-exported/read-grant provider assertions. Source checks: 111 Python/56 JS.
+
+The signed sequence-1 feed and immutable v2 ARM64 APK are published for acceptance
+testing; website promotion and successful OS-install flow are not yet claimed.
+A lower-version updater-enabled **test-only** seed rejected the genuinely absent
+feed before publication and retained versionCode 1. The initial host selector
+failure is retained. ATD cannot resolve MANAGE_UNKNOWN_APP_SOURCES; no appops/root
+bypass was used. Full-system emulator validation is being prepared separately.
+See `../UPDATE_CHANNEL.md` for trust, expiry, rollback protection and bootstrap.
+
 | Scope | Latest completed evidence |
 | --- | --- |
 | Source checks | Node 56/56; Python 108/108; Python compilation and diff whitespace checks passed |

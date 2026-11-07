@@ -100,4 +100,17 @@
     <string name="permission_allow">Allow</string>
     <string name="permission_continue">Continue</string>
     <string name="permission_unsupported">This site permission is not supported in this build. Access was denied.</string>
+    <string name="update_title">Forge updates</string>
+    <string name="update_privacy">Check razex.shop for a signed development update? Your IP address and update request reach the server; no tabs, cookies or history are sent. Checks are manual only. This channel retains the existing debug signing identity, not a production release key.</string>
+    <string name="update_check">Check now</string>
+    <string name="update_checking">Checking the signed update manifest…</string>
+    <string name="update_current">No newer compatible update is available.</string>
+    <string name="update_offer">Version %1$s · approximately %2$d MiB. Download over your current connection? Installation requires separate confirmation.</string>
+    <string name="update_download">Download</string>
+    <string name="update_downloading">Downloading and verifying the APK…</string>
+    <string name="update_verified">Download verified: hash, size, package, higher version and matching signing certificate. Open the Android installer? Your profile will not be deleted.</string>
+    <string name="update_install">Open installer</string>
+    <string name="update_permission">Android requires permission to install updates from Forge. You may enable it in system settings, then return and check again. No protections will be bypassed. Disable the permission after use if desired.</string>
+    <string name="update_settings">Open system settings</string>
+    <string name="update_failed">Update could not be verified or downloaded. Nothing was installed. Check your connection and device clock, then reopen this dialog. Do not uninstall Forge to bypass a signature mismatch.</string>
 </resources>

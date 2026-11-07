@@ -190,13 +190,18 @@ class MobileResourceTests(unittest.TestCase):
         manifest=ET.parse(MOBILE/'android/app/src/main/AndroidManifest.xml').getroot()
         ns='{http://schemas.android.com/apk/res/android}'
         permissions={p.attrib[ns+'name'] for p in manifest.findall('uses-permission')}
-        self.assertEqual(permissions,{'android.permission.INTERNET', 'android.permission.CAMERA', 'android.permission.RECORD_AUDIO'})
+        self.assertEqual(permissions,{'android.permission.INTERNET', 'android.permission.CAMERA',
+                                     'android.permission.RECORD_AUDIO', 'android.permission.REQUEST_INSTALL_PACKAGES'})
         features={p.attrib[ns+'name']:p.attrib[ns+'required'] for p in manifest.findall('uses-feature')}
         self.assertEqual(features,{'android.hardware.camera':'false', 'android.hardware.camera.autofocus':'false',
                                   'android.hardware.microphone':'false'})
         app=manifest.find('application')
         self.assertEqual(app.attrib[ns+'usesCleartextTraffic'],'false')
         self.assertEqual(app.attrib[ns+'allowBackup'],'false')
+        provider=app.find('provider')
+        self.assertEqual(provider.attrib[ns+'name'],'.UpdateProvider')
+        self.assertEqual(provider.attrib[ns+'exported'],'false')
+        self.assertEqual(provider.attrib[ns+'grantUriPermissions'],'true')
         self.assertNotIn('NSAllowsArbitraryLoads',(MOBILE/'ios/project.yml').read_text(encoding='utf-8'))
 
     def test_ios_media_usage_descriptions_are_localized_without_enabling_location(self):
