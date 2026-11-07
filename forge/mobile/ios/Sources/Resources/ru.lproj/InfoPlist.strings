@@ -1,1 +1,3 @@
 "CFBundleDisplayName" = "Forge Прототип";
+"NSCameraUsageDescription" = "Forge использует камеру только после вашего разрешения для сайта.";
+"NSMicrophoneUsageDescription" = "Forge использует микрофон только после вашего разрешения для сайта.";

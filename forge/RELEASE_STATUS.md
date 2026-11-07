@@ -1,5 +1,12 @@
 # Distribution status — 2026-10-28
 
+> This is the historical public-release snapshot, not the latest local capability
+> inventory. macOS packages were subsequently Developer ID signed/notarized and
+> internal TestFlight builds through 0.1.0 (5) were uploaded under separate authorization.
+> See `APPLE_SIGNING.md` and `RELEASE_ROADMAP.md` for their evidence and limits.
+> Later mobile source changes are not included in those distributed packages;
+> see `mobile/SOURCE_CHECKPOINT.md` for the source-publication validation scope.
+
 ## Published development packages
 
 [Download the public multiplatform prerelease](https://github.com/RAZEX0LOL/forge-browser/releases/tag/v0.1.0-dev.20261028-multiplatform),

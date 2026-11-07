@@ -5,7 +5,7 @@ import SwiftUI
 @main
 struct ForgeMobileApp: App {
     var body: some Scene {
-        WindowGroup { BrowserScreen().preferredColorScheme(.dark) }
+        WindowGroup { BrowserScreen().ignoresSafeArea(.keyboard).preferredColorScheme(.dark) }
     }
 }
 

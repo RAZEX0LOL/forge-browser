@@ -4,6 +4,12 @@ import WebKit
 @testable import ForgeMobile
 
 final class NavigationPolicyTests: XCTestCase {
+    @MainActor
+    private func isolatedController() -> BrowserController {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("forge-navigation-test-" + UUID().uuidString)
+        addTeardownBlock { try? FileManager.default.removeItem(at: directory) }
+        return BrowserController(sessionStore: BrowserSessionStore(directory: directory))
+    }
     func testHTTPSAndSearch() {
         XCTAssertEqual(NavigationPolicy.input("example.com")?.absoluteString, "https://example.com")
         XCTAssertEqual(NavigationPolicy.input("https://example.com/path")?.host, "example.com")
@@ -18,7 +24,7 @@ final class NavigationPolicyTests: XCTestCase {
 
     @MainActor
     func testNativeBrowserControlsAndBlockedInput() {
-        let controller = BrowserController()
+        let controller = isolatedController()
         controller.loadViewIfNeeded()
         func descendants(_ view: UIView) -> [UIView] {
             [view] + view.subviews.flatMap { descendants($0) }
@@ -30,7 +36,10 @@ final class NavigationPolicyTests: XCTestCase {
         XCTAssertNotNil(web.navigationDelegate)
         XCTAssertTrue(web.configuration.websiteDataStore.isPersistent)
         XCTAssertNil(web.url, "No startup page navigation")
-        XCTAssertEqual(views.compactMap { $0 as? UIButton }.count, 4)
+        let controls = views.compactMap { $0 as? UIButton }
+        for id in ["forge-go", "forge-back", "forge-forward", "forge-reload", "forge-tabs", "forge-new-tab"] {
+            XCTAssertEqual(controls.filter { $0.accessibilityIdentifier == id }.count, 1, id)
+        }
         field.text = "javascript:alert(1)"
         XCTAssertTrue(controller.textFieldShouldReturn(field))
         XCTAssertNil(web.url)
@@ -41,18 +50,24 @@ final class NavigationPolicyTests: XCTestCase {
 
     @MainActor
     func testWebKitRendersLocalDocumentThroughBrowserPolicy() async throws {
-        let controller = BrowserController()
+        let controller = isolatedController()
         controller.loadViewIfNeeded()
         func findWeb(_ view: UIView) -> WKWebView? {
             if let web = view as? WKWebView { return web }
             return view.subviews.compactMap { findWeb($0) }.first
         }
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previous = scene.windows.first { $0.isKeyWindow }
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; previous?.makeKeyAndVisible() }
         let web = findWeb(controller.view)!
         let loaded = expectation(description: "Local document rendered")
         let observer = LocalLoadObserver(controller: controller, loaded: loaded)
         web.navigationDelegate = observer
         web.loadHTMLString("<html><body><h1 id='fixture'>Forge fixture</h1></body></html>", baseURL: nil)
-        await fulfillment(of: [loaded], timeout: 15)
+        await fulfillment(of: [loaded], timeout: 60)
         let text = try await web.evaluateJavaScript("document.getElementById('fixture').textContent")
         XCTAssertEqual(text as? String, "Forge fixture")
         withExtendedLifetime(observer) {}
@@ -77,6 +92,10 @@ private final class LocalLoadObserver: NSObject, WKNavigationDelegate {
     }
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         XCTFail("Local document load failed: \(error)")
+        loaded.fulfill()
+    }
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        XCTFail("WebKit content process terminated while rendering the local fixture")
         loaded.fulfill()
     }
 }

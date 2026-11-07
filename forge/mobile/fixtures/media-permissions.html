@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; media-src blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Forge — локальная проверка камеры и микрофона</title>
+<style>
+body{font:17px system-ui;background:#101713;color:#edf5ef;margin:24px auto;padding:0 20px;max-width:720px}
+button{font:inherit;min-height:48px;margin:4px;padding:8px 16px}video{width:100%;max-height:45vh;background:#000}
+output{display:block;margin:16px 0;overflow-wrap:anywhere}meter{width:100%;height:32px}small{display:block;line-height:1.5}
+</style>
+<h1>Локальная проверка захвата</h1>
+<p>Без записи и отправки потока. Используйте только на собственном доверенном HTTPS-сайте.</p>
+<small>Страница намеренно не останавливает захват при сворачивании: это должен сделать браузер.
+Проверяйте индикатор ОС. При ошибке нажмите «Остановить» или отзовите разрешение в настройках.</small>
+<p>
+<button type="button" data-camera="true">Камера</button>
+<button type="button" data-microphone="true">Микрофон</button>
+<button type="button" data-camera="true" data-microphone="true">Оба</button>
+<button type="button" id="stop">Остановить</button>
+</p>
+<output id="status" role="status">Готово. Захват начнётся только по кнопке и после разрешений.</output>
+<video id="preview" autoplay muted playsinline aria-label="Только локальное превью"></video>
+<label for="level">Локальный уровень микрофона</label><meter id="level" min="0" max="1" value="0"></meter>
+<script>
+'use strict';
+const status = document.querySelector('#status');
+const preview = document.querySelector('#preview');
+const level = document.querySelector('#level');
+const buttons = [...document.querySelectorAll('[data-camera],[data-microphone]')];
+let stream = null;
+let audio = null;
+let frame = 0;
+let requestID = 0;
+function stop() {
+  requestID++;
+  cancelAnimationFrame(frame);
+  if (stream) stream.getTracks().forEach(track => track.stop());
+  stream = null;
+  preview.srcObject = null;
+  if (audio) audio.close().catch(() => {});
+  audio = null;
+  level.value = 0;
+  buttons.forEach(button => { button.disabled = false; });
+  status.textContent = 'Остановлено по кнопке. Проверьте индикатор ОС.';
+}
+document.querySelector('#stop').addEventListener('click', stop);
+for (const button of buttons) button.addEventListener('click', async () => {
+  stop();
+  if (!isSecureContext || location.protocol !== 'https:' || !navigator.mediaDevices?.getUserMedia) {
+    status.textContent = 'Требуется доверенный HTTPS и поддержка getUserMedia. Не обходите TLS.';
+    return;
+  }
+  const id = requestID;
+  buttons.forEach(item => { item.disabled = true; });
+  status.textContent = 'Ожидание решения сайта и ОС…';
+  try {
+    const acquired = await navigator.mediaDevices.getUserMedia({video: button.dataset.camera === 'true', audio: button.dataset.microphone === 'true'});
+    if (id !== requestID) { acquired.getTracks().forEach(track => track.stop()); return; }
+    stream = acquired;
+    preview.srcObject = stream;
+    status.textContent = 'Захват разрешён. Поток остаётся локальным; проверьте индикатор ОС.';
+    stream.getTracks().forEach(track => track.addEventListener('ended', () => {
+      status.textContent = 'Трек завершён. Дополнительно проверьте индикатор ОС.';
+    }));
+    if (stream.getAudioTracks().length) {
+      audio = new AudioContext();
+      const analyser = audio.createAnalyser();
+      analyser.fftSize = 256;
+      audio.createMediaStreamSource(stream).connect(analyser);
+      const samples = new Uint8Array(analyser.fftSize);
+      const measure = () => {
+        analyser.getByteTimeDomainData(samples);
+        level.value = Math.sqrt(samples.reduce((sum, sample) => sum + ((sample - 128) / 128) ** 2, 0) / samples.length);
+        frame = requestAnimationFrame(measure);
+      };
+      await audio.resume();
+      if (id === requestID) measure();
+    }
+  } catch (error) {
+    if (id === requestID) status.textContent = 'Доступ не получен: ' + (error?.name || 'UnknownError') + '. Содержимое устройства не отправлялось.';
+  } finally {
+    if (id === requestID) buttons.forEach(item => { item.disabled = false; });
+  }
+});
+</script>
+</html>

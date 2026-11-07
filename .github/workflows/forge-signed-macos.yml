@@ -1,0 +1,89 @@
+name: Validate notarized Forge macOS packages
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15-intel
+            target: macos-intel
+            architecture: x86_64
+            expected_checks: 270
+          - runner: macos-15
+            target: macos-arm64
+            architecture: arm64
+            expected_checks: 285
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      TARGET: ${{ matrix.target }}
+      EXPECTED_ARCH: ${{ matrix.architecture }}
+      EXPECTED_CHECKS: ${{ matrix.expected_checks }}
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: forge
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: ${{ matrix.architecture == 'arm64' && 'arm64' || 'x64' }}
+      - run: python -m pip install -r forge/requirements-test.txt
+      - name: Fetch the exact public notarized archive and verify native signing
+        id: package
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, platform, subprocess
+          from pathlib import Path
+          expected = os.environ['EXPECTED_ARCH']
+          if platform.machine().lower() != expected:
+              raise SystemExit('Native runner architecture mismatch')
+          builds = json.loads(Path('forge/site/downloads.json').read_text())['builds']
+          build = next(item for item in builds if item['target'] == os.environ['TARGET'])
+          if not build['url'].startswith('downloads/'):
+              raise SystemExit('Unexpected download origin')
+          root = Path(os.environ['RUNNER_TEMP']) / 'forge-notarized-validation'
+          root.mkdir(exist_ok=False)
+          archive = root / build['file']
+          subprocess.run(['curl', '--fail', '--location', '--proto', '=https',
+                          '--output', str(archive), 'https://razex.shop/forge/' + build['url']], check=True)
+          with archive.open('rb') as file:
+              actual = hashlib.file_digest(file, 'sha256').hexdigest()
+          if actual != build['sha256'] or archive.stat().st_size != build['bytes']:
+              raise SystemExit('Notarized archive integrity mismatch')
+          subprocess.run(['ditto', '-x', '-k', str(archive), str(root)], check=True)
+          app = root / 'Forge.app'
+          subprocess.run(['lipo', str(app / 'Contents/MacOS/firefox'), '-verify_arch', expected], check=True)
+          subprocess.run(['codesign', '--verify', '--deep', '--strict', str(app)], check=True)
+          details = subprocess.run(['codesign', '-dv', '--verbose=4', str(app)],
+                                   capture_output=True, text=True, check=True).stderr
+          if 'TeamIdentifier=22YK6BV6UY' not in details or 'runtime' not in details:
+              raise SystemExit('Unexpected signing identity or hardened runtime')
+          subprocess.run(['xcrun', 'stapler', 'validate', str(app)], check=True)
+          subprocess.run(['spctl', '--assess', '--type', 'execute', '--verbose=2', str(app)], check=True)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('binary=' + str(app / 'Contents/MacOS/forge') + '\n')
+          PY
+      - name: Native browser runtime checks on the signed package
+        run: python forge/scripts/smoke.py --binary '${{ steps.package.outputs.binary }}'
+      - name: Require the complete platform suite
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads(Path('forge/test-results/smoke.json').read_text())
+          if report['status'] != 'passed' or len(report['passed']) != int(os.environ['EXPECTED_CHECKS']):
+              raise SystemExit('Incomplete signed runtime validation')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Forge-signed-runtime-${{ matrix.target }}
+          path: forge/test-results/smoke.json
+          if-no-files-found: ignore
+          retention-days: 7

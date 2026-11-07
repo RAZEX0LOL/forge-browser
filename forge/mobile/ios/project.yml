@@ -18,7 +18,10 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.forgebrowser.mobile.development
         INFOPLIST_KEY_CFBundleDisplayName: Forge Prototype
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UILaunchStoryboardName: LaunchScreen
+        INFOPLIST_KEY_UIUserInterfaceStyle: Dark
+        INFOPLIST_KEY_NSCameraUsageDescription: 'Forge uses the camera only after you allow access for a website.'
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: 'Forge uses the microphone only after you allow access for a website.'
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: 'UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: 'UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'
@@ -31,6 +34,16 @@ targets:
     sources: [Tests]
     dependencies:
       - target: ForgeMobile
+  ForgeMobileUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.forgebrowser.mobile.keyboard-tests
+        TEST_TARGET_NAME: ForgeMobile
+    dependencies:
+      - target: ForgeMobile
 schemes:
   ForgeMobile:
     build:
@@ -38,3 +51,14 @@ schemes:
         ForgeMobile: all
     test:
       targets: [ForgeMobileTests]
+      environmentVariables:
+        FORGE_TEST_HTTPS_PROXY_PORT: $(FORGE_TEST_HTTPS_PROXY_PORT)
+  ForgeMobileKeyboardUI:
+    build:
+      targets:
+        ForgeMobile: all
+        ForgeMobileUITests: [test]
+    test:
+      targets: [ForgeMobileUITests]
+      environmentVariables:
+        FORGE_UI_TEST_LANGUAGE: $(FORGE_UI_TEST_LANGUAGE)

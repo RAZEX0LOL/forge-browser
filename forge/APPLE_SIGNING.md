@@ -1,5 +1,11 @@
 # Apple signing
 
+> The local-results section below is a historical 2026-10-28 snapshot. The app
+> record was subsequently created and internal TestFlight builds through 0.1.0 (5) uploaded
+> under separate approval. See `RELEASE_ROADMAP.md` for upload evidence, exact
+> distribution limits and newer source-only UI/privacy work. Publishing sources
+> does not update the existing TestFlight build or signed packages.
+
 `scripts/sign_macos.py` creates a separate Developer ID signed copy of a packaged
 Forge development app. It never overwrites the source app and never exports a
 Keychain private key. Pass the installed certificate SHA-1 and team explicitly:
