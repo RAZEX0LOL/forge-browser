@@ -58,7 +58,10 @@ There is no unattended install flag. `--version` is a non-network build probe.
   executable paths, not `ps comm` (macOS truncates it even with `-ww`). Do not read
   process arguments. For privacy-restricted live processes, compare the kernel
   executable basename against bundle executables and fail closed on a possible
-  match. Inconclusive relevant inspection blocks installation.
+  match. If libproc identity is restricted too, use read-only KERN_PROC_PID for
+  name/state, never KERN_PROCARGS or argv. Inconclusive relevant inspection blocks
+  installation; a fully unidentified live process still fails closed. Test
+  diagnostics expose only PID and inspection stage, not paths or arguments.
 - Rename old app to a fresh `.backup-<build>-<timestamp>` sibling, then activate
   the replacement. Roll back our rename on failure when the destination remains
   absent. Existing backup/foreign destinations must never be intentionally

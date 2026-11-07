@@ -76,6 +76,13 @@ Build number 2026110801, minimum macOS 13 declared; actual macOS13 runtime is no
 available locally. Server staging is not public activation. Windows/Linux and
 native Intel release validation remain separate gates.
 
+The added macOS15 CI then rejected v3: an unrelated closed-directory process
+guard was blocked by an unidentified process. That CI failure is retained and
+the v3 ZIP is **not** activated. A correction adds a public read-only kernel
+name/state fallback when both libproc path and identity are restricted. It never
+reads argv or ignores unidentified live processes; existing guard assertions
+remain intact. Fresh CI and a newly numbered/signed candidate are required.
+
 ### New release/site authorization and build-6 QA (2026-11-07)
 
 The owner explicitly authorized all source pushes, a new TestFlight release and

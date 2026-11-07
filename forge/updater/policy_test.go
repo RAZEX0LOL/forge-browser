@@ -297,7 +297,7 @@ func TestRunningBrowserPreventsReplacement(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := noRunningBrowser(other); err != nil {
-		t.Fatal("unrelated process incorrectly blocked replacement", err)
+		t.Fatalf("unrelated process incorrectly blocked replacement: %#v", err)
 	}
 }
 
