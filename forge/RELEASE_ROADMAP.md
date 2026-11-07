@@ -1,5 +1,25 @@
 # Release hardening roadmap
 
+## macOS DMG and real application icon — 2026-11-08
+
+Owner requested a normal Mac DMG with an application icon. The primary Apple
+Silicon download is a drag-to-Applications DMG; original ZIPs/feeds remain intact.
+Native runtime/updater stays build 2026110802, with app metadata revision 1:
+remove inherited `CFBundleIconName=AppIcon`, which selected Nightly's asset icon
+despite Forge's ICNS. The corrected app and outer DMG were separately Developer
+ID signed, notarized and stapled. No runtime code/profile-format change.
+
+The copied installed app, after the DMG was unmounted, passed 285 native-launcher
+browser checks and retained its resource seal after restarts. Its NSWorkspace
+icon matches an independent ICNS-only bundle across all RGBA channels; the same
+comparison rejects the original Nightly icon. Finder layout/Applications symlink,
+background alias and volume icon were inspected. Personal Applications/profiles
+were not used. Earlier layout/assertion/icon failures remain private evidence.
+
+`spctl` on this host reports `security disabled`; enabled-Gatekeeper runtime and
+actual Finder drag automation are not claimed. No Gatekeeper setting was changed.
+See `DMG_PACKAGING.md` for hashes, Apple receipts, install instructions and gates.
+
 This is an implementation tracker, not a claim that every platform is ready.
 Public downloads and the live landing page remain unchanged during local work.
 Internal TestFlight build 0.1.0 (3) was uploaded separately as recorded below;

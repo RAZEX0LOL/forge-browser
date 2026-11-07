@@ -123,3 +123,17 @@ in for automation of the real consent dialogs or a different-version GUI install
 
 Windows, Linux and Intel remain manual-download-only here; no feeds or claimed
 native replacement support were fabricated for those targets.
+
+### Manual DMG installer and icon correction
+
+The website also offers `Forge-development-20261108-v2-macos-arm64.dmg` for normal
+drag-to-Applications installation. Its application has metadata revision 1 of the
+same native build 2026110802: remove Firefox's inherited asset-catalog icon name
+so macOS resolves Forge's ICNS. That metadata variant is separately signed and
+notarized; it is not byte-identical to the original ZIP application.
+
+Neither signed feed nor any previous ZIP is rewritten for this manual installer.
+The updater still accepts ZIP packages, not DMG installers, and a same-build
+metadata variant is not presented as a newer native runtime. Future new packages
+must retain the icon fix from `package_macos.py`. Installation details and exact
+validation limits are in `DMG_PACKAGING.md`.

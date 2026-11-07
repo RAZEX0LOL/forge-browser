@@ -57,9 +57,9 @@ Keep backups and pre-existing files; do not delete unrelated server content.
 
 ## Current deployment — 2026-11-08
 
-Release `20261108-macos-updates-v6` is active; earlier releases remain retained.
+Release `20261108-macos-dmg-v7` is active; earlier releases remain retained.
 Ten static files were byte-verified over HTTPS after the atomic symlink swap.
-Five local downloads passed full server-side hashes and HTTP HEAD checks;
+Six local downloads passed full server-side hashes and HTTP HEAD checks;
 the root and both Matrix discovery responses stayed unchanged. No nginx config
 change or reload was needed. Existing unrelated IPv6 nginx warning remains.
 
@@ -75,6 +75,14 @@ without overflow. Mac ARM64 build 2026110802 is separately signed/notarized, wit
 is manual; newer-version GUI upgrade and exact macOS13 runtime are not claimed
 as fully tested. Legacy Mac/Windows/Linux/mobile archives remain October snapshots.
 Windows/Linux/Intel updater installation is not enabled by this publication.
+The primary Apple Silicon download is now a signed/notarized DMG with a real
+Forge application icon and drag-to-Applications layout. Its app metadata revision
+1 removes the upstream AppIcon asset override; native runtime build stays
+2026110802. A test copy installed from the unmounted DMG passed 285 browser checks,
+resource seals and an all-channel system-icon reference comparison. Old ZIPs and
+both feeds stay byte-identical. `spctl` reported security disabled on the host;
+enabled-Gatekeeper runtime and actual Finder dragging are not claimed as tested.
+See `../DMG_PACKAGING.md` for the complete packaging/acceptance procedure.
 Both signed feed responses and root/Matrix discovery stayed byte-identical during
 the landing-page swap; no nginx change/reload was needed. Renew feeds before their
 dated expiry with higher signed sequences; there is no automatic signing cron.

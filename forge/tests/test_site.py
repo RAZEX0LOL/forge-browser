@@ -42,8 +42,8 @@ class SiteTests(unittest.TestCase):
         manifest = json.loads((SITE / 'downloads.json').read_text())
         builds = manifest['builds']
         targets = {b['target']: b for b in builds}
-        self.assertEqual(len(targets), 14)
-        self.assertEqual(len({b['file'] for b in builds}), 14)
+        self.assertEqual(len(targets), 15)
+        self.assertEqual(len({b['file'] for b in builds}), 15)
         links = [attrs for tag, attrs in Page((SITE / 'index.html').read_text()).tags
                  if tag == 'a' and 'data-target' in attrs]
         self.assertEqual({a['data-target'] for a in links}, set(targets))
@@ -97,6 +97,19 @@ class SiteTests(unittest.TestCase):
         self.assertTrue((SITE / channel['url']).is_file())
         self.assertIn('windows-x64', manifest['desktopUpdateChannels']['notEnabledTargets'])
         self.assertIn('linux-x64', manifest['desktopUpdateChannels']['notEnabledTargets'])
+
+    def test_primary_macos_download_is_icon_fixed_dmg_and_updater_zip_is_preserved(self):
+        manifest = json.loads((SITE / 'downloads.json').read_text())
+        targets = {item['target']: item for item in manifest['builds']}
+        current, archive = targets['macos-arm64'], targets['macos-arm64-updater-zip']
+        self.assertTrue(current['file'].endswith('.dmg'))
+        self.assertEqual(current['applicationMetadataRevision'], 1)
+        self.assertEqual(current['applicationIcon'], 'forge.icns')
+        self.assertTrue(current['systemApplicationIconValidated'])
+        self.assertFalse(current['gatekeeperEnabledRuntimeTested'])
+        self.assertEqual(archive['sha256'], 'c3560f04b0565584244638ed5cb328a264664e81286ccd2390c8cf49bc3c3045')
+        self.assertTrue(archive['file'].endswith('.zip'))
+        self.assertIn('Перетащи Forge в', (SITE / 'index.html').read_text())
 
     def test_site_has_no_remote_passive_resources_inline_scripts_or_forms(self):
         for name in ('index.html', 'privacy.html'):

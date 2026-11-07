@@ -1,5 +1,18 @@
 # Apple signing
 
+## Icon-corrected DMG packaging (2026-11-08)
+
+The DMG variant keeps native runtime/updater build 2026110802, with application
+metadata revision 1: the inherited `CFBundleIconName=AppIcon` is removed so macOS
+uses `forge.icns`. No browser code or profile format changes. The app was signed
+again and notarized separately (`c1f902a9-56ed-4569-89b5-9c6abbbce173`); its original
+ZIP and feed are not rewritten. DMG packaging/signing/acceptance is described in
+`DMG_PACKAGING.md`. A signed file and a real system-resolved icon are separate gates.
+
+The current host's `spctl` reports `security disabled`. Assessment output must be
+retained with that caveat; do not interpret an override as enabled-Gatekeeper
+runtime acceptance. No OS trust setting or quarantine is modified by this workflow.
+
 ## Server-updater Mac ARM64 bootstrap (2026-11-08)
 
 Build 2026110802 is Developer ID signed, Apple-notarized and stapled; Gatekeeper
