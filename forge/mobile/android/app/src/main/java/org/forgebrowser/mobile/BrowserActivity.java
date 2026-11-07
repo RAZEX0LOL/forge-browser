@@ -57,6 +57,7 @@ public final class BrowserActivity extends Activity {
     private Button startDownload, saveDownload, cancelDownload;
     private static final int SAVE_DOWNLOAD = 41;
     private BrowserPermissions permissions;
+    private BrowserUploads uploads;
     private boolean foreground;
     private boolean resumed;
     private String pendingExternalLink;
@@ -80,6 +81,8 @@ public final class BrowserActivity extends Activity {
         long permissionVersion;
         boolean mediaGranted;
         boolean externalResponse;
+        String requestedAddress, documentAddress;
+        boolean ignoringInitialBlank;
         final BrowserNavigationState navigation = new BrowserNavigationState();
     }
 
@@ -240,6 +243,15 @@ public final class BrowserActivity extends Activity {
             || (tabDialog != null && tabDialog.isShowing()) || state.downloads.stage == BrowserDownloads.Stage.CONFIRM);
         activities.put(this, true);
         if (state.downloads == null) state.downloads = new BrowserDownloads(getApplicationContext());
+        uploads = new BrowserUploads(this, new BrowserUploads.Host() {
+            @Override public boolean current(GeckoSession source, String document, long version) {
+                TabRuntime page = state.pages.get(state.tabs.selectedId());
+                return !clearingSiteData && !isFinishing() && page != null && session == source
+                    && page.session == source && source.isOpen() && page.permissionVersion == version
+                    && document.equals(page.documentAddress) && page.navigation.phase == BrowserNavigationState.Phase.READY;
+            }
+            @Override public void unavailable() { showStatus(R.string.upload_unavailable); }
+        });
         state.downloads.listener = this::refreshDownloads;
         refreshDownloads();
         sessionStore = new BrowserSessionStore(getNoBackupFilesDir());
@@ -338,6 +350,13 @@ public final class BrowserActivity extends Activity {
     }
 
     private void bind(String id, TabRuntime page) {
+        page.session.setPromptDelegate(new GeckoSession.PromptDelegate() {
+            @Override public GeckoResult<PromptResponse> onFilePrompt(GeckoSession source, FilePrompt prompt) {
+                if (!resumed || !foreground || state.savePickerOpen || (tabDialog != null && tabDialog.isShowing()))
+                    return GeckoResult.fromValue(prompt.dismiss());
+                return uploads.request(source, page.documentAddress, page.permissionVersion, prompt);
+            }
+        });
         BrowserTabs owner = page.privatePage ? state.privateTabs : state.regularTabs;
         page.session.setNavigationDelegate(new GeckoSession.NavigationDelegate() {
             @Override public GeckoResult<AllowOrDeny> onLoadRequest(GeckoSession current, LoadRequest request) {
@@ -346,6 +365,9 @@ public final class BrowserActivity extends Activity {
                 if (request.target == TARGET_WINDOW_NEW) return GeckoResult.fromValue(AllowOrDeny.DENY);
                 boolean allowed = !clearingSiteData && state.pages.get(id) == page && NavigationPolicy.allows(request.uri);
                 if (allowed) {
+                    uploads.navigation(current);
+                    if (request.hasUserGesture && "about:blank".equals(request.uri)) page.requestedAddress = request.uri;
+                    page.documentAddress = null;
                     page.secureOrigin = null;
                     page.permissionVersion++;
                     if (current == session) permissions.cancel();
@@ -355,13 +377,18 @@ public final class BrowserActivity extends Activity {
             }
             @Override public void onLocationChange(GeckoSession current, String url,
                 List<GeckoSession.PermissionDelegate.ContentPermission> contentPermissions, Boolean gesture) {
-                if (clearingSiteData || state.pages.get(id) != page || (page.pendingLoad && "about:blank".equals(url))) return;
+                if (clearingSiteData || state.pages.get(id) != page || ("about:blank".equals(url)
+                    && (page.pendingLoad || awaitingRequestedPage(page)))) return;
                 if (!java.util.Objects.equals(BrowserPermissions.origin(url), page.secureOrigin)) {
                     page.secureOrigin = null;
                     page.permissionVersion++;
                     if (current == session) permissions.cancel();
                 }
-                if (url != null && owner.update(id, url, null)) persistSession();
+                if (url != null && owner.update(id, url, null)) {
+                    page.documentAddress = url;
+                    if (!"about:blank".equals(url)) page.requestedAddress = null;
+                    persistSession();
+                }
                 if (current == session) refreshControls();
             }
             @Override public void onCanGoBack(GeckoSession current, boolean value) {
@@ -424,24 +451,29 @@ public final class BrowserActivity extends Activity {
             }
             @Override public void onPageStart(GeckoSession current, String url) {
                 if (clearingSiteData || state.pages.get(id) != page || !page.userNavigationStarted) return;
+                page.ignoringInitialBlank = "about:blank".equals(url) && awaitingRequestedPage(page);
+                if (page.ignoringInitialBlank) return;
+                uploads.navigation(current);
+                page.permissionVersion++;
                 page.navigation.start();
                 page.externalResponse = false;
                 if (current == session) refreshNavigation();
             }
             @Override public void onProgressChange(GeckoSession current, int progress) {
-                if (clearingSiteData || state.pages.get(id) != page) return;
+                if (clearingSiteData || state.pages.get(id) != page || page.ignoringInitialBlank) return;
                 page.navigation.progress(progress);
                 if (current == session) refreshNavigation();
             }
             @Override public void onPageStop(GeckoSession current, boolean success) {
                 if (clearingSiteData || state.pages.get(id) != page) return;
+                if (page.ignoringInitialBlank) { page.ignoringInitialBlank = false; return; }
                 if (!success) { page.secureOrigin = null; if (current == session) permissions.cancel(); }
                 if (!page.userNavigationStarted) return;
                 page.navigation.complete(success);
                 if (current == session) refreshNavigation();
                 BrowserTabs.Tab visited = owner.find(id);
                 if (success && page.navigation.phase == BrowserNavigationState.Phase.READY && !page.externalResponse
-                    && visited != null && !page.privatePage) {
+                    && visited != null && visited.url().equals(page.documentAddress) && !page.privatePage) {
                     try { libraryStore.recordVisit(visited.url(), visited.title(), false); }
                     catch (IOException | JSONException error) { if (current == session) showStatus(R.string.library_unavailable); }
                 }
@@ -479,6 +511,10 @@ public final class BrowserActivity extends Activity {
 
     private boolean currentTab(String id) { return session != null && id.equals(state.tabs.selectedId()); }
 
+    private static boolean awaitingRequestedPage(TabRuntime page) {
+        return page.requestedAddress != null && !page.requestedAddress.equals("about:blank");
+    }
+
     private static GeckoSession.PermissionDelegate.MediaSource source(GeckoSession.PermissionDelegate.MediaSource[] sources, int source, int type) {
         if (sources == null) return null;
         for (GeckoSession.PermissionDelegate.MediaSource value : sources)
@@ -489,13 +525,14 @@ public final class BrowserActivity extends Activity {
     private void stopMediaSessions(String keepID) {
         for (String id : new java.util.ArrayList<>(state.pages.keySet())) {
             TabRuntime page = state.pages.get(id);
-            if (!page.mediaGranted || id.equals(keepID)) continue;
+            if ((!page.mediaGranted && !uploads.hasAccess(page.session)) || id.equals(keepID)) continue;
             if (browser.getSession() == page.session) { browser.releaseSession(); session = null; }
             page.session.setPermissionDelegate(null);
             page.session.setNavigationDelegate(null);
             page.session.setProgressDelegate(null);
             page.session.setContentDelegate(null);
             page.session.close();
+            uploads.engineClosed(page.session);
             state.pages.remove(id);
         }
     }
@@ -562,6 +599,7 @@ public final class BrowserActivity extends Activity {
     private void activateSelected(boolean loadSavedPage) {
         if (clearingSiteData) return;
         closeFindInPage();
+        uploads.cancel();
         permissions.cancel();
         stopMediaSessions(state.tabs.selectedId());
         if (state.privateBrowsing) getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
@@ -589,8 +627,15 @@ public final class BrowserActivity extends Activity {
     private void reloadSelected() {
         if (clearingSiteData) return;
         if (state.tabs.selected().url().equals("about:blank")) return;
+        if (uploads.hasAccess(session)) {
+            stopMediaSessions(null);
+            activateSelected(false);
+        }
         TabRuntime page = state.pages.get(state.tabs.selectedId());
         page.userNavigationStarted = true;
+        page.requestedAddress = state.tabs.selected().url();
+        page.documentAddress = null;
+        page.ignoringInitialBlank = false;
         page.navigation.start();
         refreshNavigation();
         if (page.pendingLoad) {
@@ -654,6 +699,7 @@ public final class BrowserActivity extends Activity {
             removed.session.setProgressDelegate(null);
             removed.session.setContentDelegate(null);
             removed.session.close();
+            uploads.engineClosed(removed.session);
         }
         persistSession();
         if (selected) activateSelected(loadSavedPage); else refreshControls();
@@ -682,6 +728,7 @@ public final class BrowserActivity extends Activity {
             page.session.setProgressDelegate(null);
             page.session.setContentDelegate(null);
             page.session.close();
+            uploads.engineClosed(page.session);
         }
         state.privateTabs = new BrowserTabs();
     }
@@ -734,6 +781,7 @@ public final class BrowserActivity extends Activity {
     }
 
     private void prepareForSiteDataClearing() {
+        uploads.cancel();
         permissions.cancel();
         closeFindInPage();
         address.clearFocus();
@@ -748,6 +796,7 @@ public final class BrowserActivity extends Activity {
             page.session.setProgressDelegate(null);
             page.session.setContentDelegate(null);
             if (page.session.isOpen()) { page.session.stop(); page.session.close(); }
+            uploads.engineClosed(page.session);
         }
         state.pages.clear();
         state.privateTabs = new BrowserTabs();
@@ -816,6 +865,7 @@ public final class BrowserActivity extends Activity {
 
     @Override protected void onActivityResult(int request, int result, Intent data) {
         super.onActivityResult(request, result, data);
+        if (uploads != null && uploads.result(request, result, data)) return;
         if (request != SAVE_DOWNLOAD) return;
         state.savePickerOpen = false;
         if (result == RESULT_OK && data != null && data.getData() != null) state.downloads.save(data.getData());
@@ -971,11 +1021,20 @@ public final class BrowserActivity extends Activity {
         closeFindInPage();
         try {
             String url = NavigationPolicy.fromInput(address.getText().toString());
+            if (uploads.hasAccess(session)) {
+                stopMediaSessions(null);
+                activateSelected(false);
+            }
             if (!state.tabs.update(state.tabs.selectedId(), url, "")) throw new IllegalArgumentException();
             persistSession();
-            state.pages.get(state.tabs.selectedId()).pendingLoad = false;
-            state.pages.get(state.tabs.selectedId()).userNavigationStarted = true;
-            state.pages.get(state.tabs.selectedId()).navigation.start();
+            TabRuntime page = state.pages.get(state.tabs.selectedId());
+            page.pendingLoad = false;
+            page.userNavigationStarted = true;
+            page.requestedAddress = url;
+            page.documentAddress = null;
+            page.ignoringInitialBlank = false;
+            page.navigation.start();
+            refreshNavigation();
             address.clearFocus();
             ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(address.getWindowToken(), 0);
             session.loadUri(url);
@@ -1002,6 +1061,7 @@ public final class BrowserActivity extends Activity {
         presentPendingExternalLink();
     }
     @Override protected void onPause() {
+        if (uploads != null) uploads.pause();
         resumed = false;
         pendingExternalLink = null;
         linkActionVersion++;
@@ -1032,9 +1092,17 @@ public final class BrowserActivity extends Activity {
             page.session.setProgressDelegate(null);
             page.session.setContentDelegate(null);
             page.session.close();
+            uploads.engineClosed(page.session);
         }
     }
     @Override public void onDestroy() {
+        if (uploads != null) {
+            uploads.cancel();
+            // Upload-bearing engines are never retained across configuration
+            // changes: close access before their Activity-owned leases disappear.
+            stopMediaSessions(null);
+            uploads.destroy();
+        }
         if (permissions != null) permissions.cancel();
         activities.remove(this);
         if (tabDialog != null) tabDialog.dismiss();

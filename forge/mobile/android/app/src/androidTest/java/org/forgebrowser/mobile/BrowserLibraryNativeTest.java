@@ -152,6 +152,36 @@ public final class BrowserLibraryNativeTest {
         }
     }
 
+    @Test public void lateInitialBlankCannotReplaceRequestedAddressOrRecordAnUnvisitedPage() {
+        try (ActivityScenario<BrowserActivity> scenario = ActivityScenario.launch(BrowserActivity.class)) {
+            scenario.onActivity(activity -> {
+                android.widget.EditText address = activity.getWindow().getDecorView().findViewWithTag("forge-address");
+                String target = "https://requested-page-fixture.invalid/";
+                address.setText(target);
+                address.onEditorAction(android.view.inputmethod.EditorInfo.IME_ACTION_GO);
+                GeckoSession page = ((GeckoView)activity.getWindow().getDecorView().findViewWithTag("forge-browser")).getSession();
+                page.getNavigationDelegate().onLocationChange(page, "about:blank", java.util.Collections.emptyList(), false);
+                page.getProgressDelegate().onPageStart(page, "about:blank");
+                page.getProgressDelegate().onPageStop(page, true);
+                try { assertEquals(target, activity.tabsSnapshot().selected().url()); }
+                catch (Exception error) { throw new AssertionError(error); }
+                assertTrue("An initial blank completion is not a successful HTTPS visit", store.snapshot().history().isEmpty());
+                assertNotNull(activity.getWindow().getDecorView().findViewWithTag("forge-stop"));
+                page.getProgressDelegate().onPageStart(page, target);
+                page.getNavigationDelegate().onLocationChange(page, target, java.util.Collections.emptyList(), false);
+                page.getProgressDelegate().onPageStop(page, true);
+                assertEquals(1, store.snapshot().history().size());
+                assertEquals(target, store.snapshot().history().get(0).url);
+                address.setText("about:blank");
+                address.onEditorAction(android.view.inputmethod.EditorInfo.IME_ACTION_GO);
+                page.getNavigationDelegate().onLocationChange(page, "about:blank", java.util.Collections.emptyList(), true);
+                try { assertEquals("about:blank", activity.tabsSnapshot().selected().url()); }
+                catch (Exception error) { throw new AssertionError(error); }
+                page.stop();
+            });
+        }
+    }
+
     private static void visit(BrowserActivity activity, GeckoSession session, String url, boolean success) throws Exception {
         java.lang.reflect.Field stateField = BrowserActivity.class.getDeclaredField("state"); stateField.setAccessible(true);
         Object state = stateField.get(activity);

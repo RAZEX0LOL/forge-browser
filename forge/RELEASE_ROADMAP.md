@@ -7,6 +7,67 @@ the redesigned iPhone interface and later privacy work are not in that build.
 
 ## Cross-platform daily-use gates (2026-11-01)
 
+### Forms/upload staging checkpoint (2026-11-07; local, not a release)
+
+Latest follow-up: iOS local-form checks passed 3/3 in ru and 3/3 in en under
+`forge-mobile-forms-20261107-ios-v2`. No requests reached a destination server.
+Android now has an experimental FilePrompt coordinator with local automated checks: native explicit
+confirmation, a single read-only ACTION_OPEN_DOCUMENT selection, selected-stream
+staging (never provider path resolution), session/document/version checks and
+engine-close-before-copy-cleanup lifecycle hooks. The native warning labels the
+top-level page, not an unobservable requesting-frame origin. Camera/folder/multiple
+selection is rejected. Startup cleanup is bounded and does not follow symlinks.
+One process-global copy worker cannot guarantee interruption of a provider that
+blocks indefinitely; the 60-second byte-copy deadline is cooperative.
+
+`forge-mobile-file-picker-20261107-android-v1-focused` passed APK/test-APK build,
+unit 43/43 and lint with only OldTargetApi, but host-load preflight blocked native
+launch. The next `android-v2-focused` snapshot passed native 9/9, unit 43/43 and
+lint with only OldTargetApi. Review then added session-scoped cancellation on
+document start (including a new document at the same URL) and a tenth regression.
+`android-v3-focused` passed native 10/10 and unit 43/43. The complete
+`forge-mobile-file-picker-20261107-android-v4-full` snapshot passed native 63/63,
+unit 43/43 and lint with only OldTargetApi. APK SHA-256:
+`2e0b271f228ad6800161f595bbe778d83fd91fe3be3758f0d56c819e6d1404b6`.
+Manifest inspection confirmed that the provider is shipped
+only in the test APK, never the browser APK. Real file-input/picker/grant/multipart acceptance
+is not established. The existing 53/53 native result below applies only to the
+earlier staging/navigation sources; the 63/63 result covers this new integration
+within the fixture scope above. This is a source-only checkpoint, not a release.
+
+- Added an Android upload-copy core, not a picker integration: selected streams
+  only, no provider `_data` resolution, 32-MiB hard streaming cap, bounded safe
+  names, private-cache 0600/0700 permissions and explicit cleanup leases. Host
+  tests passed 9/9; Android unit tests passed 40/40 and all three new native
+  staging checks passed. Lint reports only the existing OldTargetApi warning.
+- Complete `forge-mobile-upload-staging-20261107-android-v1` FAILED 51/52:
+  a late initial `about:blank` replaced the address in the existing duplicate
+  external-intent scenario. Failed evidence is retained, not accepted wholesale.
+- Navigation now distinguishes requested from observed document addresses and
+  avoids recording unvisited pages. A deterministic blank-callback regression
+  keeps assertions for loading controls, history and explicit blank navigation.
+  The first focused run (`android-v2-focused`) FAILED 1/2 because address submit
+  did not synchronously refresh the loading button. Production refresh was
+  corrected, without removing the assertion or extending deadlines; the next
+  focused snapshot (`android-v3-focused`) passed 2/2 and unit 40/40. The complete
+  `android-v4-full` snapshot then passed native 53/53 and unit 40/40; lint still
+  reports only OldTargetApi. APK SHA-256:
+  `a7d28b2c820bae9d792f5b40e491fb9e7fd93171ebddd8f5eb3c2d2a92522b3c`.
+- Source checks passed Python 97/97, Node 56/56, compileall and diff whitespace
+  checks in `forge-upload-staging-20261107-source-v1`.
+- Three iOS form-policy/privacy tests were initially unrun (later ru/en acceptance
+  is recorded above). They use
+  local HTML and cancel destination requests after observing Forge's decision;
+  no fixture credentials are submitted to a server. Custom upload-panel APIs
+  start at iOS 18.4; deployment target remains iOS 17. Native provider/picker,
+  lifecycle-bound completion and engine-access/lease cleanup remain outstanding.
+- The first iOS forms preflight (`forge-mobile-forms-20261107-ios-v1`) stopped
+  at the host-load guard before simulator boot or xcodebuild. A follow-up receipt
+  recorded load 9.00 on eight logical CPUs, with mediaanalysisd and Raycast among
+  the busiest processes. No unrelated process was stopped and the guard was not
+  relaxed. This blocked launch is not a form-test result.
+- These are later source changes, not TestFlight build 5 or published packages.
+
 ### Daily-use product work authorized (2026-11-05)
 
 The owner requested the complete mobile-first improvement program, followed by

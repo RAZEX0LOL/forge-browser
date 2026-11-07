@@ -7,6 +7,39 @@ MOBILE=Path(__file__).resolve().parents[1]/'mobile'
 
 
 class MobileResourceTests(unittest.TestCase):
+    def test_android_picker_does_not_resolve_provider_paths_or_request_broad_grants(self):
+        source=(MOBILE/'android/app/src/main/java/org/forgebrowser/mobile/BrowserUploads.java').read_text()
+        self.assertIn('Intent.ACTION_OPEN_DOCUMENT',source)
+        self.assertIn('Intent.CATEGORY_OPENABLE',source)
+        self.assertIn('Intent.FLAG_GRANT_READ_URI_PERMISSION',source)
+        self.assertIn('new String[]{OpenableColumns.DISPLAY_NAME}',source)
+        self.assertIn('openAssetFileDescriptor(uri, "r")',source)
+        self.assertIn('Uri.fromFile(copy.file)',source)
+        self.assertIn('host.current(request.session, request.document, request.version)',source)
+        self.assertIn('pending.session == session',source)
+        self.assertIn('requestCode != pickerCode',source)
+        self.assertNotIn('takePersistableUriPermission',source)
+        self.assertNotIn('FLAG_GRANT_WRITE_URI_PERMISSION',source)
+        self.assertNotIn('FLAG_GRANT_PERSISTABLE_URI_PERMISSION',source)
+        self.assertNotIn('ACTION_OPEN_DOCUMENT_TREE',source)
+        self.assertNotIn('ACTION_IMAGE_CAPTURE',source)
+        self.assertNotIn('"_data"',source)
+        manifest=(MOBILE/'android/app/src/main/AndroidManifest.xml').read_text()
+        self.assertNotIn('UploadFixtureProvider',manifest)
+
+    def test_upload_staging_is_stream_bounded_private_and_independent_of_provider_paths(self):
+        source=(MOBILE/'android/app/src/main/java/org/forgebrowser/mobile/BrowserUploadStaging.java').read_text()
+        self.assertIn('MAXIMUM_BYTES = 32L * 1024 * 1024',source)
+        self.assertIn('received + count > MAXIMUM_BYTES',source)
+        self.assertIn('try (InputStream input = selected)',source)
+        self.assertIn('ownerOnly(partial, false)',source)
+        self.assertIn('ownerOnly(directory, true)',source)
+        self.assertIn('Files.deleteIfExists',source)
+        self.assertIn('error.addSuppressed(cleanup)',source)
+        self.assertNotIn('getContentResolver',source)
+        self.assertNotIn('getColumnIndex',source)
+        self.assertNotIn('takePersistableUriPermission',source)
+
     def test_android_os_link_entry_is_https_only_confirmed_and_not_restored_from_state(self):
         manifest=ET.parse(MOBILE/'android/app/src/main/AndroidManifest.xml').getroot()
         ns='{http://schemas.android.com/apk/res/android}'

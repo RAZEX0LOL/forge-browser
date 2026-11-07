@@ -141,6 +141,23 @@ iOS generic HTTPS delivery remains gated on Apple's default-browser entitlement
 and provisioning; no fake https URL scheme, entitlement request or upload was added.
 Forms/file uploads and real-device OS chooser workflows remain unverified.
 
+Local forms/file follow-up (2026-11-07): iOS form-policy/privacy fixtures passed
+3/3 per ru/en language without sending POST bodies to a server. Android's earlier
+staging/navigation snapshot passed 53 native and 40 unit tests. A subsequent
+experimental file-picker coordinator is connected and locally fixture-tested:
+one explicitly confirmed file up to 32 MiB, no camera/folder/multiple selection,
+provider stream copied into private cache, and source-page/session checks before
+completion. Upload-bearing pages unload when leaving their tab/app so the engine
+closes before the copy is removed; reload is required before another attachment.
+The picker build passed 43 unit tests; an initial native launch was blocked by
+host load, and a later snapshot passed nine controller/lifecycle native tests.
+A same-URL document-start correction then passed ten targeted native tests;
+the complete updated Android snapshot passed 63/63 native and 43/43 unit tests,
+with only the existing OldTargetApi lint warning.
+Real file-input, provider
+grant and server multipart workflows remain gates, not shipped capabilities.
+These later sources are not part of TestFlight build 5 or public packages.
+
 Android OS-link entry subsequently passed49/49 native +31/31 unit, plus two startup
 controls; lint only OldTargetApi. The launch filter identity is retained for
 framework lifecycle/restoration, while extras/ClipData/selector/grants are stripped;

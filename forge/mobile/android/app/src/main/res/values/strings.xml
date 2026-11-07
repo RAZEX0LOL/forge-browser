@@ -1,4 +1,8 @@
 <resources>
+    <string name="upload_title">Attach one file?</string>
+    <string name="upload_warning">Top-level page: %1$s\nThis page or an embedded frame can receive the selected file, up to 32 MiB. No camera or folder access. When you leave this tab or app, the page is unloaded before the private copy is removed. Reload the page before choosing another attachment.</string>
+    <string name="upload_choose">Choose file</string>
+    <string name="upload_unavailable">Attachment unavailable. Choose one file up to 32 MiB on a loaded HTTPS page; reload before attaching another. Cameras and folders are not supported.</string>
     <string name="app_name">Forge Prototype</string>
     <string name="address">HTTPS address or search</string>
     <string name="go">Go</string>
