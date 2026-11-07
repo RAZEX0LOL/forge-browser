@@ -1,11 +1,30 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-10-28",
+  "asOf": "2026-11-07",
   "repository": "https://github.com/RAZEX0LOL/forge-browser",
   "release": "v0.1.0-dev.20261028-multiplatform",
   "status": "Development software. No supported automatic security-update service.",
-  "iosTestFlight": {"version": "0.1.0", "build": "2", "reviewStateAsOfDate": "WAITING_FOR_REVIEW", "publicLink": null},
+  "packageSnapshotDate": "2026-10-28",
+  "androidCurrentPackageDate": "2026-11-07",
+  "sourceCheckpoint": "9ed729458ba9a5746d2bfcc257b1a2dc56c4100d",
+  "iosTestFlight": {"version": "0.1.0", "build": "6", "processingState": "VALID", "internalBuildState": "IN_BETA_TESTING", "externalBuildState": "BETA_APPROVED", "publicLink": "https://testflight.apple.com/join/4hvp4sk8", "publicGroupIncludesBuild": true, "nativeTestsPerLanguage": 67, "uiTestsPerLanguage": 9, "languages": ["ru", "en"], "defaultFilesCancellationTests": 1, "physicalDevicesValidated": false},
   "builds": [
+    {
+      "target": "android-arm64-v8a-current",
+      "file": "Forge-android-20261107-arm64-v8a-debug.apk",
+      "url": "downloads/Forge-android-20261107-arm64-v8a-debug.apk",
+      "sha256": "ff2350deef8ff8bdebd378a742720eb6fed744df93a03202776afdd62c7ad250",
+      "bytes": 199182256,
+      "sourceCommit": "9ed729458ba9a5746d2bfcc257b1a2dc56c4100d",
+      "engine": "GeckoView 159.0.20261022150525",
+      "signing": "Development debug identity; not a stable production signing channel",
+      "certificateSha256": "4faadf5155d5d72c0b48b19139da9b4c9a2dabc4111374cf3c6acdee3cbf942d",
+      "versionCode": 1,
+      "nativeTests": 64,
+      "unitTests": 43,
+      "realUploadCases": 3,
+      "runtimeValidation": "Isolated ARM64/API35 emulator. Physical devices unverified; no production update guarantee. Do not uninstall an existing app to bypass signing conflicts."
+    },
     {
       "target": "macos-arm64",
       "file": "Forge-development-20261028-macos-arm64-notarized.zip",

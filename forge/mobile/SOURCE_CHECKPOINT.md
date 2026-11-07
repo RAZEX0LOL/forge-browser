@@ -1,16 +1,40 @@
 # Mobile source checkpoint — 2026-11-07
 
-This is a development-source checkpoint, not a binary release or daily-use
-readiness claim. The owner authorized committing/pushing these sources to the
-`forge` branch. That authorization does not include a new TestFlight upload,
-release publication, website deployment or Apple capability request.
+This remains development software, not a daily-use readiness claim. The earlier
+authorization covered source pushes only. On 2026-11-07 the owner additionally
+authorized all source pushes, a new TestFlight upload and deployment of the
+download website. No default-browser entitlement or other Apple capability
+request is implied by that release authorization.
+
+## Authorized distribution — 2026-11-07
+
+`forge-testflight-20261107-build6-qa1` passed the current iOS snapshot with build-6
+overrides: native 67/67 and UI 9/9 in each of ru/en (152 executions, no skips).
+The separate Files-panel test initially hit a runner startup abort in XCTest's
+stall handler while UIKit accessibility loaded, before the test method ran
+(`ios-v5`). A control used `test-without-building` on the same owned simulator
+and verified identical app/runner/test executable hashes. It passed 1/1 and
+recorded zero POST attempts (`ios-v6`). This validates default WebKit Files
+opening/cancellation on iOS27, not successful file submission, custom upload
+guards, exact iOS17/18.4 behavior or the cause of the earlier stall.
+
+After a load-blocked archive preflight, build 6 was signed, Apple-validated,
+uploaded once and processed VALID. External state is BETA_APPROVED; build 6 is
+assigned to the public group: https://testflight.apple.com/join/4hvp4sk8.
+IPA SHA-256: `1e04e71b7ab0fbfb2a22a29d3036ed781b3a05468e7060ffd47327d84eefab76`.
+The website https://razex.shop/forge/ now offers that invitation and the newly
+named Android ARM64 debug APK, matching the accepted 64-native/43-unit/three-E2E
+snapshot. Android source commit is `9ed729458ba9a5746d2bfcc257b1a2dc56c4100d`;
+build-6 iOS inputs are recorded in the private frozen source manifest, with build
+number 6 supplied explicitly. Later documentation/site commits do not rebuild
+either binary. Older packages and failed/interrupted evidence remain preserved.
 
 ## Validation scope
 
 | Scope | Latest completed evidence |
 | --- | --- |
-| Source checks | Node 56/56; Python 106/106; Python compilation and diff whitespace checks passed |
-| iOS current production sources | Native 64/64 per language and UI 9/9 per language, 146 executions across separate ru/en native/UI runs |
+| Source checks | Node 56/56; Python 108/108; Python compilation and diff whitespace checks passed |
+| iOS build-6 sources | Native 67/67 per language and UI 9/9 per language, 152 executions; separate same-binary Files cancellation 1/1 |
 | Android previous stage-4a snapshot | Native 41/41, unit 27/27; lint only OldTargetApi |
 | Android current OS-link-entry delta | Native 49/49, unit 31/31, plus separate startup controls 2/2; lint only OldTargetApi. Earlier failures remain preserved |
 | Android local staging/navigation delta | Native 53/53, unit 40/40; targeted regression 2/2; lint only OldTargetApi. Picker not integrated |

@@ -44,7 +44,26 @@ targets:
         TEST_TARGET_NAME: ForgeMobile
     dependencies:
       - target: ForgeMobile
+  ForgeMobileUploadUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UploadUITests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.forgebrowser.mobile.upload-tests
+        TEST_TARGET_NAME: ForgeMobile
+    dependencies:
+      - target: ForgeMobile
 schemes:
+  ForgeMobileUploadUI:
+    build:
+      targets:
+        ForgeMobile: all
+        ForgeMobileUploadUITests: [test]
+    test:
+      targets: [ForgeMobileUploadUITests]
+      environmentVariables:
+        FORGE_UPLOAD_FIXTURE_URL: $(FORGE_UPLOAD_FIXTURE_URL)
   ForgeMobile:
     build:
       targets:

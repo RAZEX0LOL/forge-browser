@@ -20,12 +20,30 @@ class Page(HTMLParser):
 
 
 class SiteTests(unittest.TestCase):
+    def test_release_status_distinguishes_packages_sources_and_testflight(self):
+        manifest = json.loads((SITE / 'downloads.json').read_text())
+        text = (SITE / 'index.html').read_text()
+        self.assertEqual(manifest['packageSnapshotDate'], '2026-10-28')
+        self.assertRegex(manifest['asOf'], r'^\d{4}-\d{2}-\d{2}$')
+        self.assertRegex(manifest['sourceCheckpoint'], r'^[a-f0-9]{40}$')
+        self.assertIn('id="status"', text)
+        self.assertIn('Исходники, пакеты и TestFlight — разные снимки.', text)
+        self.assertIn('Desktop и архивные мобильные пакеты — снимки 28 октября.', text)
+        ios = manifest['iosTestFlight']
+        self.assertIn(ios['version'] + ' (' + ios['build'] + ')', text)
+        self.assertEqual(ios['processingState'], 'VALID')
+        self.assertIn(ios['externalBuildState'], ('BETA_APPROVED', 'IN_BETA_TESTING'))
+        self.assertTrue(ios['publicGroupIncludesBuild'])
+        self.assertRegex(ios['publicLink'], r'^https://testflight\.apple\.com/join/[A-Za-z0-9]+$')
+        links = [a['href'] for tag, a in Page(text).tags if tag == 'a' and a.get('data-testflight') == 'public']
+        self.assertEqual(links, [ios['publicLink']])
+
     def test_downloads_match_unique_manifest_entries_and_checksums(self):
         manifest = json.loads((SITE / 'downloads.json').read_text())
         builds = manifest['builds']
         targets = {b['target']: b for b in builds}
-        self.assertEqual(len(targets), 11)
-        self.assertEqual(len({b['file'] for b in builds}), 11)
+        self.assertEqual(len(targets), 12)
+        self.assertEqual(len({b['file'] for b in builds}), 12)
         links = [attrs for tag, attrs in Page((SITE / 'index.html').read_text()).tags
                  if tag == 'a' and 'data-target' in attrs]
         self.assertEqual({a['data-target'] for a in links}, set(targets))
@@ -40,6 +58,22 @@ class SiteTests(unittest.TestCase):
         for build in builds:
             self.assertEqual(checksums[build['file']], build['sha256'])
         self.assertEqual(checksums['downloads.json'], hashlib.sha256((SITE / 'downloads.json').read_bytes()).hexdigest())
+
+    def test_current_android_download_is_separate_and_explicitly_debug_signed(self):
+        manifest = json.loads((SITE / 'downloads.json').read_text())
+        targets = {item['target']: item for item in manifest['builds']}
+        current = targets['android-arm64-v8a-current']
+        legacy = targets['android-arm64-v8a']
+        self.assertNotEqual(current['file'], legacy['file'])
+        self.assertTrue(current['url'].startswith('downloads/'))
+        self.assertEqual(current['versionCode'], 1)
+        self.assertIn('debug identity', current['signing'])
+        self.assertRegex(current['certificateSha256'], r'^[a-f0-9]{64}$')
+        self.assertEqual(current['nativeTests'], 64)
+        self.assertEqual(current['unitTests'], 43)
+        self.assertEqual(current['realUploadCases'], 3)
+        self.assertIn('versionCode 1', (SITE / 'index.html').read_text())
+        self.assertEqual(manifest['androidCurrentPackageDate'], '2026-11-07')
 
     def test_site_has_no_remote_passive_resources_inline_scripts_or_forms(self):
         for name in ('index.html', 'privacy.html'):
@@ -70,8 +104,8 @@ class SiteTests(unittest.TestCase):
         self.assertTrue(all('hidden' not in a for a in panels))
         self.assertIn('Автоматического сервиса обновлений безопасности пока нет', text)
         self.assertIn('После подписи требуется повторный тест на Intel Mac', text)
-        self.assertIn('Открытой ссылки на TestFlight пока нет', text)
-        self.assertFalse(any('testflight.apple.com/join/' in a.get('href', '') for _, a in tags))
+        self.assertIn('Это бета-версия, не выпуск App Store.', text)
+        self.assertEqual(sum('testflight.apple.com/join/' in a.get('href', '') for _, a in tags), 1)
         self.assertIn('prefers-reduced-motion', (SITE / 'styles.css').read_text())
 
     def test_nginx_only_adds_scoped_static_routes_and_security_headers(self):

@@ -1,10 +1,11 @@
 # Native build matrix
 
 > Historical public artifact matrix (2026-10-28). Later Developer ID signing,
-> notarization and internal TestFlight builds through build 5 are tracked in
+> notarization and public TestFlight build 6 are tracked in
 > `APPLE_SIGNING.md` and `RELEASE_ROADMAP.md`; the original unsigned/ad-hoc
 > entries below do not describe those separately produced packages. Local mobile
-> UI/private-tab work is not in the public release. See the roadmap's current
+> UI/private-tab work is included in the separately dated build-6 beta and new
+> Android ARM64 debug APK, not the October archives. See the roadmap's current
 > cross-platform daily-use gates before treating any target as production-ready.
 
 These are development artifact builds, not signed/notarized stable installers.

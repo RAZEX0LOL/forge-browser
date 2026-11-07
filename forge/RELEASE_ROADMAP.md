@@ -7,6 +7,48 @@ the redesigned iPhone interface and later privacy work are not in that build.
 
 ## Cross-platform daily-use gates (2026-11-01)
 
+### New release/site authorization and build-6 QA (2026-11-07)
+
+The owner explicitly authorized all source pushes, a new TestFlight release and
+deployment of the browser/download website. This supersedes earlier source-only
+publication limits for these actions, not Apple capability requests or claims
+of physical-device/daily-use readiness. Existing build-5 artifacts stay frozen.
+
+Current iOS sources passed build-6 candidate QA under
+`forge-testflight-20261107-build6-qa1`: native 67/67 and UI 9/9 in each ru/en,
+152 successful executions with no skips. The corrected standard Files-panel
+test then hit a runner startup abort before any test method (`ios-v5`): the main
+thread was loading UIKit accessibility, and XCTest's stall handler aborted.
+An explicit same-compiled-binary `test-without-building` control on that owned
+simulator passed 1/1 with no POST (`ios-v6`). Original failure and crash report
+remain preserved; green control does not prove the underlying stall cause.
+
+Read-only ASC preflight confirmed latest build 5, build-6 availability, an internal
+all-builds group and an external group with its public link disabled. Build-6
+archive preflight was initially load-blocked before root or archive creation.
+After load subsided, the frozen candidate was signed, Apple-validated and uploaded
+once: 0.1.0 (6), VALID, internal IN_BETA_TESTING, external BETA_APPROVED. Build UUID
+`b5e82a2e-15f3-450f-b8c3-9668b4921ef3`; IPA SHA-256
+`1e04e71b7ab0fbfb2a22a29d3036ed781b3a05468e7060ffd47327d84eefab76`.
+Build 6 is assigned to the externally approved group with public enrollment:
+https://testflight.apple.com/join/4hvp4sk8. Public landing and group membership
+were independently verified. ru/en-US beta descriptions and build notes were
+updated; review contact unchanged, no manual invitations/notifications sent.
+
+A newly named current Android ARM64 APK is published on the website:
+debug signing/versionCode 1 disclosed, accepted SHA-256
+`ff2350deef8ff8bdebd378a742720eb6fed744df93a03202776afdd62c7ad250`.
+Its first SCP timed out after 194,534,400 of 199,182,256 bytes; that partial was
+preserved, the local prefix matched, and an append/resume completed with the full
+expected SHA-256. No incomplete file was publicly exposed.
+
+The refreshed https://razex.shop/forge/ is active as `20261107-landing-v3`.
+Ten static files were verified byte-for-byte; three local downloads passed
+server hashes and HEAD/range checks. Previous release and all old filenames are
+retained, root/Matrix discovery responses unchanged. nginx configuration and
+services were not changed/reloaded. Source-only earlier limits are historical;
+this release does not establish physical-device or production readiness.
+
 ### Real upload-form follow-up (2026-11-07; local, after `7bae3ebde0f`)
 
 The dedicated upload AVD now exercises a real HTML file input, native consent,

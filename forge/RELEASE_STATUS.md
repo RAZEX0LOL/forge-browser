@@ -2,9 +2,11 @@
 
 > This is the historical public-release snapshot, not the latest local capability
 > inventory. macOS packages were subsequently Developer ID signed/notarized and
-> internal TestFlight builds through 0.1.0 (5) were uploaded under separate authorization.
+> TestFlight 0.1.0 (6) is VALID/BETA_APPROVED under separate authorization.
 > See `APPLE_SIGNING.md` and `RELEASE_ROADMAP.md` for their evidence and limits.
-> Later mobile source changes are not included in those distributed packages;
+> New mobile work is distributed separately via public build-6 TestFlight and a
+> newly named Android ARM64 debug APK at https://razex.shop/forge/, not retroactively
+> included in the October archives;
 > see `mobile/SOURCE_CHECKPOINT.md` for the source-publication validation scope.
 
 ## Published development packages

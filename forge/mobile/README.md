@@ -1,13 +1,13 @@
 # Forge mobile prototypes
 
-See [SOURCE_CHECKPOINT.md](SOURCE_CHECKPOINT.md) for the 2026-11-07 source-push
-scope, accepted checks and pending Android OS-link validation. Publishing these
-sources does not replace TestFlight build 5 or any existing public package.
+See [SOURCE_CHECKPOINT.md](SOURCE_CHECKPOINT.md) for the 2026-11-07 validation and
+distribution scope. Public TestFlight 0.1.0 (6) and a new Android ARM64 debug APK
+are linked at https://razex.shop/forge/. Older packages remain unchanged.
 
 These are **new, minimal mobile applications**, not a port of the desktop XUL
 interface, not Firefox/Fenix with a changed name, and not stable browsers.
 
-## Unreleased local development
+## Development chronology (historical statuses below)
 
 The next mobile-first product increment adds a dedicated native text-only tab
 overview and a separate browser menu on both platforms. Search matches titles/URLs
@@ -168,12 +168,13 @@ same-CA wrong-host certificate controls failed closed. Test trust is confined to
 a new upload-only Gecko profile, never production settings or personal profiles.
 Final recheck passed all three cases and counts every POST attempt, including
 rejected bodies; cancellation made no POST attempt.
-An iOS27 Files-panel test opened the real picker but failed a Browse-title
-selector; the corrected picker-scoped selector remains a local/uncommitted
-experiment after load-blocked preflights and a harness-interrupted run. It is
-not part of this accepted Android source delta. Installed runtimes do not allow
-exact iOS17/18.4 acceptance. This is still isolated fixture evidence, not arbitrary
-provider/real-device or daily-use readiness.
+The corrected iOS27 Files-panel selector subsequently passed 1/1 with zero POST
+attempts using identical compiled app/runner/test executables and
+`test-without-building` (ios-v6). The earlier selector failure, load blocks,
+harness interruption and ios-v5 XCTest startup abort remain preserved; the
+control does not establish the stall cause. Installed runtimes do not allow exact
+iOS17/18.4 acceptance. This is isolated cancellation evidence, not successful
+iOS upload, arbitrary-provider/real-device or daily-use readiness.
 
 Android OS-link entry subsequently passed49/49 native +31/31 unit, plus two startup
 controls; lint only OldTargetApi. The launch filter identity is retained for

@@ -55,7 +55,17 @@ Rollback means pointing that symlink to the previous retained release; for an
 initial deployment, remove only the newly added include and reload after testing.
 Keep backups and pre-existing files; do not delete unrelated server content.
 
-TestFlight status is dated in the manifest and manually updated. No public
-TestFlight link exists while the external build awaits review; developer archives
-are not offered as installable iPhone IPAs. Do not publish private App Store
-Connect links or contact information as download links.
+## Current deployment — 2026-11-07
+
+Release `20261107-landing-v3` is active; `20261028-landing-v2` is retained.
+Ten static files were byte-verified over HTTPS after the atomic symlink swap.
+Three local downloads passed full server-side hashes and HTTP HEAD/range checks;
+the root and both Matrix discovery responses stayed unchanged. No nginx config
+change or reload was needed. Existing unrelated IPv6 nginx warning remains.
+
+Android ARM64 uses a new immutable filename, debug signing and versionCode 1;
+desktop and legacy mobile packages remain historical October snapshots.
+TestFlight 0.1.0 (6) is VALID/BETA_APPROVED and assigned to the enabled public group:
+https://testflight.apple.com/join/4hvp4sk8. Status is dated and manually updated.
+Developer archives are not installable iPhone IPAs. Do not publish private App
+Store Connect links, credentials or review contact information.
