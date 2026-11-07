@@ -17,7 +17,10 @@ class MobileResourceTests(unittest.TestCase):
         self.assertEqual([d.get(ns+'scheme') for d in view_filters[0].findall('data')],['https'])
         source=(MOBILE/'android/app/src/main/java/org/forgebrowser/mobile/BrowserActivity.java').read_text()
         self.assertIn('if (savedInstanceState == null) receiveExternalIntent(incoming)',source)
-        self.assertIn('setIntent(new Intent(Intent.ACTION_MAIN))',source)
+        self.assertIn('incoming.cloneFilter()',source)
+        for cleanup in ('identity.replaceExtras((Bundle)null)', 'identity.setClipData(null)',
+                        'identity.setSelector(null)', 'identity.setFlags(0)'):
+            self.assertIn(cleanup,source)
         self.assertIn('BrowserExternalLinks.fromViewIntent',source)
         self.assertIn('if (externalLinkDialog != null) externalLinkDialog.dismiss()',source)
         self.assertIn('linkActionVersion != version || state.privateBrowsing != privateMode',source)

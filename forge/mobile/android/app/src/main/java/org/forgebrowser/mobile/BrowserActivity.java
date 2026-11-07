@@ -255,14 +255,22 @@ public final class BrowserActivity extends Activity {
             showStatus(R.string.site_data_clearing);
         } else { activateSelected(false); }
         Intent incoming = getIntent();
-        // Do not retain untrusted URLs/extras in this Activity's recreation intent.
-        setIntent(new Intent(Intent.ACTION_MAIN));
+        // Preserve the OS launch filter identity used by lifecycle/restoration,
+        // but discard untrusted payloads and grants. Android may retain the
+        // original launch URL independently; Forge does not persist a URL queue.
+        Intent identity = incoming == null ? new Intent().setComponent(getComponentName()) : incoming.cloneFilter();
+        identity.replaceExtras((Bundle)null);
+        identity.setClipData(null);
+        identity.setSelector(null);
+        identity.setFlags(0);
+        setIntent(identity);
         if (savedInstanceState == null) receiveExternalIntent(incoming);
     }
 
     @Override protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        setIntent(new Intent(Intent.ACTION_MAIN));
+        // A warm VIEW is consumed explicitly, not installed as a future launch
+        // intent or saved in the Activity state.
         receiveExternalIntent(intent);
     }
 

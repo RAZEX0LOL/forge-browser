@@ -108,8 +108,13 @@ public final class BrowserExternalLinkNativeTest {
             awaitConfirmation(scenario);
             scenario.onActivity(activity -> {
                 assertTabs(activity, 1, "about:blank");
-                assertNull(activity.getIntent().getData());
-                assertEquals(Intent.ACTION_MAIN, activity.getIntent().getAction());
+                assertEquals(Uri.parse(URL), activity.getIntent().getData());
+                assertEquals(Intent.ACTION_VIEW, activity.getIntent().getAction());
+                assertEquals(activity.getComponentName(), activity.getIntent().getComponent());
+                assertNull(activity.getIntent().getExtras());
+                assertNull(activity.getIntent().getClipData());
+                assertNull(activity.getIntent().getSelector());
+                assertEquals(0, activity.getIntent().getFlags());
             });
             assertArrayEquals(before, Files.readAllBytes(file.toPath()));
             click(scenario, AlertDialog.BUTTON_NEGATIVE);
@@ -119,10 +124,15 @@ public final class BrowserExternalLinkNativeTest {
     @Test public void confirmedColdEntryCreatesANewRegularSessionAndIgnoresExtras() throws Exception {
         Intent incoming = viewIntent(URL).putExtra(Intent.EXTRA_TEXT, "https://ignored-fixture.invalid/")
             .putExtra("com.android.browser.headers", new android.os.Bundle());
+        incoming.setClipData(android.content.ClipData.newPlainText("Fixture", "Ignored payload"));
         AtomicReference<GeckoSession> original = new AtomicReference<>();
         try (ActivityScenario<BrowserActivity> scenario = ActivityScenario.launch(incoming)) {
             awaitConfirmation(scenario);
-            scenario.onActivity(activity -> { original.set(page(activity)); assertNull(activity.getIntent().getExtras()); });
+            scenario.onActivity(activity -> {
+                original.set(page(activity));
+                assertNull(activity.getIntent().getExtras());
+                assertNull(activity.getIntent().getClipData());
+            });
             click(scenario, AlertDialog.BUTTON_POSITIVE);
             scenario.onActivity(activity -> {
                 assertTabs(activity, 2, URL); assertFalse(activity.isPrivateBrowsing());

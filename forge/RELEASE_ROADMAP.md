@@ -479,6 +479,65 @@ Node56/56, Python96/96, compileall and diff whitespace checks passed. GitHub Act
 audit: push triggers source checks only; mobile/desktop builds and release
 publication remain manual workflows. Do not dispatch them as part of this push.
 
+Source checkpoint committed and pushed as516edebcd5f6788466ee7b18f9a8ac6560b08500;
+live remote forge SHA confirmed equal. Exactly80 reviewed source/test/doc/manual-CI
+files were included (650956 bytes at pre-push audit); no artifact/credential pattern
+findings. Local overlay state was deliberately excluded. This is source publication,
+not a new app package, release or TestFlight upload.
+
+The pending Android-v2 run later reported31/31 unit, lint only OldTargetApi, but
+native instrumentation exceeded its unchanged900s limit:7 pass statuses,19 failure
+statuses, then an unfinished27th case out of49. Lifecycle failures started at the
+first Activity-dependent test; do not classify this as49 tests completed or green.
+Incomplete log and analysis are retained in that evidence directory.
+
+ActivityScenario1.7 bytecode confirms activityMatchesIntent compares original and
+current Activity action/data/type/component/categories on every lifecycle event.
+Replacing the launch Intent with a blank MAIN removed that identity and made the
+monitor ignore CREATED/RESUMED after PRE_ON_CREATE. This is a confirmed harness
+compatibility failure, not proof that the real app never reached those lifecycle
+states. The corrective implementation preserves the framework launch filter via
+cloneFilter, strips extras/ClipData/selector/grants, and leaves the original filter
+unchanged on warm onNewIntent. Re-creation replay is still explicitly rejected by
+savedInstanceState handling. Android may retain its original launch URL outside
+Forge; no secure-erasure claim is made for framework/task records.
+
+Cold-entry tests retain no-load/no-write/privacy checks and now verify preserved
+launch identity plus stripped payload/grants rather than a blank MAIN action.
+Two native startup controls (existing local Gecko launch +cold VIEW cancellation)
+are being checked first in `forge-mobile-external-links-20261107-android-v3-focused`;
+no full retry or timeout increase before that result. Forms/files work is paused
+until the entry regression is checked. These corrections are local after the push.
+
+GitHub source checks for516edebcd5f completed successfully:
+https://github.com/RAZEX0LOL/forge-browser/actions/runs/42380950777 .
+The first local corrective build compiled app/unit code but failed native-test
+compilation because Intent.setClipData returns void and was chained in a test;
+that test construction was corrected without removing payload assertions.
+
+Android-v4-focused then PASSED31/31 unit, lint only OldTargetApi, and2/2 native
+startup controls (existing Gecko blank load and cold VIEW cancellation). App SHA256:
+9380d6699b91fc1333be6a67400270fb7ed31f093afe4af39f6a6803aa1bd41c.
+The immediately following full launch was blocked before tests by ADB still
+listing5582 after focused-runner shutdown. Follow-up inspection found adb devices
+empty and no qemu/ForgeTabs process; no process was killed or evidence overwritten.
+The blocked-launch receipt is preserved in Android-v5-full. Its full49-test run
+is now in progress, with the same source/APK and unchanged test timeouts.
+
+Stage4b Android local automated acceptance PASSED: Android-v5-full49/49 native,
+unit31/31, lint only OldTargetApi; separate startup controls2/2. All38 working
+app-source files matched the build manifest and were frozen alongside
+`stage4b-summary.json`. Cold/warm confirmation, rejected actions/schemes,
+regular/private preservation, no pre-confirmation navigation/write, ignored
+payloads, duplicate-address protection, pause/recreation rejection and tab bound
+all passed. Prior compile failures and the incomplete900s run remain preserved.
+
+This validates isolated Intent/native-dialog fixtures, not physical OS chooser
+selection or default-browser role compatibility. iOS default-browser entitlement
+and provisioning remain unconfigured; forms/file uploads are still pending.
+The corrective launch-identity code/status will be committed/pushed as a follow-up
+to the owner's source-publication request, without app/release/TestFlight uploads.
+
 | Platform | Existing baseline | Remaining release gates |
 | --- | --- | --- |
 | Windows x64/ARM64 | Native Firefox artifact builds, 260 checks per target in earlier CI | Publisher signing, install/upgrade/profile migration, security-update pipeline, real daily use |

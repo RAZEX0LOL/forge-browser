@@ -141,6 +141,15 @@ iOS generic HTTPS delivery remains gated on Apple's default-browser entitlement
 and provisioning; no fake https URL scheme, entitlement request or upload was added.
 Forms/file uploads and real-device OS chooser workflows remain unverified.
 
+Android OS-link entry subsequently passed49/49 native +31/31 unit, plus two startup
+controls; lint only OldTargetApi. The launch filter identity is retained for
+framework lifecycle/restoration, while extras/ClipData/selector/grants are stripped;
+warm entry does not replace the original launch filter. Recreation still does
+not replay the original link. All38 Android source hashes match the accepted
+snapshot under `forge-mobile-external-links-20261107-android-v5-full`, whose
+`stage4b-summary.json` indexes results and preserved earlier failures. Physical
+chooser/default-role workflows and iOS entitlement remain separate pending gates.
+
 The working sources now add native tab creation/selection/closure (up to 32),
 independent live engine sessions and versioned atomic persistence of tab URLs,
 titles and selection. Cold launch restores the list without navigating saved
