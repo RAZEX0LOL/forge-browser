@@ -58,8 +58,10 @@ def run_surface_checks(client, results, passed):
     """)
     check("Custom control center opens with real actions", """
         document.getElementById('forge-hub-button').doCommand();
+        const t = ChromeUtils.importESModule('chrome://browser/content/forge/Localization.sys.mjs').createStrings(window);
         return document.getElementById('forge-control-center').open &&
-            document.querySelectorAll('.forge-hub-action').length === 13;
+            document.querySelectorAll('.forge-hub-action').length === 14 &&
+            Array.from(document.querySelectorAll('.forge-hub-action')).some(action => action.getAttribute('aria-label') === t('forge-command-updates'));
     """)
     screenshot("control-center")
     client.execute_script("document.getElementById('forge-control-center').close();")

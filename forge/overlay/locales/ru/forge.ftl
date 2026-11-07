@@ -244,3 +244,7 @@ forge-downloads-empty = Здесь будут твои файлы.
 forge-downloads-empty-help = Завершённые и текущие загрузки появятся в этом списке.
 forge-extensions-empty = Расширений пока нет.
 forge-extensions-help = Добавляй только те, которым доверяешь. Управление и установка из файла — в меню справа.
+forge-command-updates = Проверить обновления Forge
+forge-update-unavailable = Серверные обновления для этой платформы ещё не включены. Используй проверенные пакеты с сайта.
+forge-update-running = Проверка или установка обновления уже запущена.
+forge-update-bootstrap = Сначала установи подписанный bootstrap-пакет Forge с updater. Старые архивы не содержат его.

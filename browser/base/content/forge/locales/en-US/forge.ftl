@@ -243,3 +243,7 @@ forge-downloads-empty = Your files will appear here.
 forge-downloads-empty-help = Completed and ongoing downloads will appear in this list.
 forge-extensions-empty = No extensions yet.
 forge-extensions-help = Add only extensions you trust. Manage and install from a file using the menu on the right.
+forge-command-updates = Check for Forge updates
+forge-update-unavailable = Server updates are not enabled for this platform yet. Use verified packages from the website.
+forge-update-running = An update check or installation is already running.
+forge-update-bootstrap = Install the signed Forge bootstrap package with the updater first. Historical archives do not include it.

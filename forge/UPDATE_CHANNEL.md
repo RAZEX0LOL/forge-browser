@@ -88,7 +88,11 @@ are retained, not counted as install passes. No physical-device acceptance.
 ## Other platforms
 
 iOS stays on Apple's TestFlight update mechanism. It must not download/install
-an App Store IPA from this server. Desktop artifact packages do not yet have a
-Forge-keyed native update service. Mozilla MAR signature verification must not
-be disabled or redirected to unsigned Forge payloads. Desktop integration is a
-separate stage; merely hosting files is not a working desktop auto-updater.
+an App Store IPA from this server. The owner selected full-package desktop
+updates, starting with macOS, rather than replacing/disabling Mozilla MAR checks.
+The implementation and native test/build procedure are in
+[updater/README.md](updater/README.md). Historical desktop archives do not contain
+the new helper. macOS bootstrap signing/notarization and signed replacement
+acceptance are separate gates; Windows/Linux installation remains disabled until
+their native implementation and validation exist. Merely hosting files is not a
+working desktop auto-updater.

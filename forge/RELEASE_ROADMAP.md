@@ -33,6 +33,49 @@ signing, not an unattended security-update SLA. Desktop full-package helper is
 a separate in-progress stage; historical desktop downloads have no new updater.
 iOS remains TestFlight.
 
+### macOS full-package updater candidate (2026-11-08)
+
+The owner chose full-package replacement, starting with macOS, then separate
+Windows/Linux work. A small native helper checks a desktop-specific signed feed,
+verifies URL/size/hash/ZIP safety and Developer ID/bundle identity/Gatekeeper,
+requires a closed browser and separate consent, keeps the old app as a sibling
+backup and never accepts a profile path or unattended install flag. Mozilla MAR
+and OS trust protections remain unchanged. UI includes localized ru/en update
+commands and consent messages; unsupported platforms fail with a localized notice.
+
+macOS v1 was blocked for an SDK-default 27.2 deployment target. v2's final minos
+13.0 still concealed newer-OS CGo objects; it was blocked, not signed/published.
+The v3 builder pins both CGo compilation/link flags, rebuilds all objects and
+rejects mixed deployment warnings. Source native UI's exact action count was
+updated from 13 to 14 **and** asserts the new localized update command; earlier
+failed QA is preserved, not overwritten or converted into a pass.
+
+Process-guard tests exposed `ps comm` path truncation. The helper now uses native
+libproc paths and kernel executable-name fallback for privacy-restricted processes,
+without reading argv; possible bundle matches block installation. The owned live-
+process test and race-enabled Go tests passed. No root or privileged service.
+
+Candidate v3 was Developer ID signed, notarized once (submission
+`3e91d624-12fb-4eab-aea6-76663376d5b9`), stapled and Gatekeeper-assessed.
+Signed raw-runtime QA passed 283 checks; the separate native launcher run passed
+285, including verified restarts and resource-seal validity. Real extraction and
+replacement of two notarized same-build **test copies** passed with a retained
+backup and unchanged outside-app canary. This is not newer-version/GUI-consent
+installation acceptance. The browser-child lifetime control initially confused
+proc_pidpath failure with proof of process exit; that failure is retained. The
+corrected control waits for the owned parent Popen and observed app processes to
+exit, with the same 30-second deadline and unchanged production bytes. It passed:
+actual Firefox blocks replacement, fully closed Firefox permits it, and the
+nsIProcess child survives normal browser shutdown. The exact transient PID cause
+is not proven; mozprofile interpreter-teardown warnings are retained separately.
+
+Immutable candidate ZIP: `Forge-development-20261108-updater-macos-arm64-notarized.zip`,
+168,730,310 bytes; SHA-256
+`c3daacee8fd62c7ffa09c74f000e7c0b7c46871fc04611f9605ff1766af2d29d`.
+Build number 2026110801, minimum macOS 13 declared; actual macOS13 runtime is not
+available locally. Server staging is not public activation. Windows/Linux and
+native Intel release validation remain separate gates.
+
 ### New release/site authorization and build-6 QA (2026-11-07)
 
 The owner explicitly authorized all source pushes, a new TestFlight release and

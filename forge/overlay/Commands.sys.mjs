@@ -2,6 +2,7 @@
  * License, v. 2.0. https://mozilla.org/MPL/2.0/ */
 import { createStrings } from "./Localization.sys.mjs";
 import { ValidationError } from "./core.sys.mjs";
+import { launchDesktopUpdater } from "./Updates.sys.mjs";
 export function createCommands(win, { open, openEditor, showPalette, toolbox, workspace }) {
   const t = createStrings(win);
   const invoke = id => win.document.getElementById(id).dispatchEvent(new win.Event("command", { bubbles: true }));
@@ -14,6 +15,7 @@ export function createCommands(win, { open, openEditor, showPalette, toolbox, wo
     ["bookmarks", "bookmark", "bookmarks", "library", () => win.PlacesCommandHook.showPlacesOrganizer("AllBookmarks")],
     ["appearance", "palette", "theme custom css дизайн тема", "browser", openEditor],
     ["settings", "settings", "settings preferences", "browser", () => open("about:preferences")],
+    ["updates", "download", "update upgrade version", "browser", launchDesktopUpdater],
     ["addons", "extension", "addons extensions", "browser", () => open("about:addons")],
     ["passwords", "lock", "passwords", "browser", () => open("about:logins")],
     ["privacy", "shield", "privacy policies", "browser", () => open("about:policies")],

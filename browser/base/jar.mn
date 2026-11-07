@@ -14,6 +14,7 @@ browser.jar:
         content/browser/forge/Shortcuts.sys.mjs (content/forge/Shortcuts.sys.mjs)
         content/browser/forge/NetworkAudit.sys.mjs (content/forge/NetworkAudit.sys.mjs)
         content/browser/forge/Localization.sys.mjs (content/forge/Localization.sys.mjs)
+        content/browser/forge/Updates.sys.mjs (content/forge/Updates.sys.mjs)
         content/browser/forge/localize.js (content/forge/localize.js)
         content/browser/forge/locales/ru/forge.ftl (content/forge/locales/ru/forge.ftl)
         content/browser/forge/locales/en-US/forge.ftl (content/forge/locales/en-US/forge.ftl)

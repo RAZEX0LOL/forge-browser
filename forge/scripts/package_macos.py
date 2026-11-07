@@ -5,6 +5,7 @@
 import argparse
 from pathlib import Path
 import plistlib
+import re
 import shutil
 import subprocess
 import sys
@@ -44,7 +45,9 @@ def sign_bundle(output):
     # installed, seal it independently so its old Info.plist hash is replaced.
     runtime = output / "Contents/MacOS/firefox"
     updater_runtime = output / "Contents/MacOS/updater.app/Contents/MacOS/org.mozilla.updater.real"
-    for bundle in [updater_runtime] + sorted(nested, key=lambda path: len(path.parts), reverse=True) + [runtime, output]:
+    helper = output / "Contents/MacOS/forge-update"
+    helpers = [helper] if helper.is_file() else []
+    for bundle in [updater_runtime, *helpers] + sorted(nested, key=lambda path: len(path.parts), reverse=True) + [runtime, output]:
         subprocess.run(["codesign", "--force", "--sign", "-", "--preserve-metadata=entitlements,requirements,flags,runtime", str(bundle)], check=True)
     subprocess.run(["codesign", "--verify", "--deep", "--strict", str(output)], check=True)
 
@@ -54,6 +57,7 @@ def main():
     parser.add_argument("--source", type=Path, default=Path(__file__).resolve().parents[1] / "upstream/firefox")
     parser.add_argument("--output", type=Path, required=True, help="New path ending in Forge.app")
     parser.add_argument('--native-locale-stage',type=Path,help='Verified output of native_locale.py; built-in resources, not an extension')
+    parser.add_argument('--updater-helper', type=Path, help='New native full-package updater, signed with the bundle later')
     args = parser.parse_args()
     if sys.platform != "darwin":
         parser.error("Packaging is supported on macOS only")
@@ -68,6 +72,20 @@ def main():
     if args.native_locale_stage:
         from native_locale import validate_stage
         validate_stage(args.native_locale_stage)
+    if args.updater_helper:
+        if not args.updater_helper.is_file() or args.updater_helper.is_symlink():
+            parser.error('Updater helper must be a regular compiled Mach-O file')
+        expected_archs = subprocess.check_output(['lipo', '-archs', str(source / 'Contents/MacOS/firefox')], text=True).split()
+        helper_archs = subprocess.check_output(['lipo', '-archs', str(args.updater_helper)], text=True).split()
+        if set(expected_archs) != set(helper_archs):
+            parser.error('Updater helper architectures must match the browser')
+        deployment = subprocess.check_output(['xcrun', 'vtool', '-show-build', str(args.updater_helper)], text=True)
+        minimum = re.search(r'\bminos\s+(\d+)\.(\d+)', deployment)
+        if not minimum or tuple(map(int, minimum.groups())) > (13, 0):
+            parser.error('Updater helper must be built with MACOSX_DEPLOYMENT_TARGET=13.0 or lower')
+        version = subprocess.check_output([str(args.updater_helper.resolve()), '--version'], text=True)
+        if not version.startswith('Forge full-package updater '):
+            parser.error('Unexpected updater helper build')
     # Check optional dependency before making a large copy.
     try:
         import PIL  # noqa: F401
@@ -81,12 +99,21 @@ def main():
         install(args.native_locale_stage.resolve(),output)
     info = output / "Contents/Info.plist"
     info.write_bytes(plistlib.dumps(forge_metadata(plistlib.loads(info.read_bytes()))))
+    if args.updater_helper:
+        # The new bootstrap has an explicit supported minimum, not the builder's SDK default.
+        data = plistlib.loads(info.read_bytes())
+        data['LSMinimumSystemVersion'] = '13.0'
+        info.write_bytes(plistlib.dumps(data))
+        helper = output / 'Contents/MacOS/forge-update'
+        shutil.copyfile(args.updater_helper, helper)
+        helper.chmod(0o755)
     create_icon(output / "Contents/Resources/forge.icns")
-    subprocess.run(["xcrun", "clang", "-Wall", "-Wextra", "-Werror", "-O2",
+    deployment_flags = ['-mmacosx-version-min=13.0'] if args.updater_helper else []
+    subprocess.run(["xcrun", "clang", *deployment_flags, "-Wall", "-Wextra", "-Werror", "-O2",
                      str(Path(__file__).with_name("macos_launcher.c")), "-o", str(output / "Contents/MacOS/forge")], check=True)
     updater = output / "Contents/MacOS/updater.app/Contents/MacOS/org.mozilla.updater"
     updater.rename(updater.with_name(updater.name + '.real'))
-    subprocess.run(["xcrun", "clang++", "-Wall", "-Wextra", "-Werror", "-O2", "-fobjc-arc", "-framework", "AppKit",
+    subprocess.run(["xcrun", "clang++", *deployment_flags, "-Wall", "-Wextra", "-Werror", "-O2", "-fobjc-arc", "-framework", "AppKit",
                     str(Path(__file__).with_name("macos_relauncher.mm")), "-o", str(updater)], check=True)
     sign_bundle(output)
     print(f"Created {output}\nLocal ad-hoc signature only. Not Developer ID signed or notarized; not a release.")

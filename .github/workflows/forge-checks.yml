@@ -25,4 +25,26 @@ jobs:
           python-version: '3.12'
       - run: node --test tests/*.test.mjs
       - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
-      - run: python3 -m compileall -q scripts tests
+      - run: python3 -m compileall -q scripts tests updater
+  macos-updater-tests:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: forge
+    env:
+      CGO_ENABLED: '1'
+      MACOSX_DEPLOYMENT_TARGET: '13.0'
+      CGO_CFLAGS: '-O2 -g -mmacosx-version-min=13.0'
+      CGO_LDFLAGS: '-mmacosx-version-min=13.0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: forge
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.3'
+          cache: false
+      - run: go test -race -p 1 ./...
+        working-directory: forge/updater
+      - run: python3 updater/build_macos.py --arch "$(go env GOARCH)" --build-number 2026110801 --output "$RUNNER_TEMP/forge-update"
+      - run: '"$RUNNER_TEMP/forge-update" --version'

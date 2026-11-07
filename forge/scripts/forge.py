@@ -20,7 +20,7 @@ STATE = ".forge-overlay-state.json"
 HOOK = '  <script src="chrome://browser/content/forge/forge.js"></script>'
 ANCHOR = '  <script src="chrome://browser/content/browser-main.js"></script>'
 FILES = ("forge.js", "Forge.sys.mjs", "core.sys.mjs", "forge.css", "forge.svg",
-         "Shell.sys.mjs", "Keyboard.sys.mjs", "TabTransfer.sys.mjs", "Shortcuts.sys.mjs", "NetworkAudit.sys.mjs", "Localization.sys.mjs", "localize.js", "locales/ru/forge.ftl", "locales/en-US/forge.ftl", "start.html", "start.css", "DesignSystem.sys.mjs",
+          "Shell.sys.mjs", "Keyboard.sys.mjs", "TabTransfer.sys.mjs", "Shortcuts.sys.mjs", "NetworkAudit.sys.mjs", "Localization.sys.mjs", "Updates.sys.mjs", "localize.js", "locales/ru/forge.ftl", "locales/en-US/forge.ftl", "start.html", "start.css", "DesignSystem.sys.mjs",
          "design-tokens.sys.mjs", "design-system.css", "ControlCenter.sys.mjs", "hub.svg", "vault.svg", "Lifecycle.sys.mjs", "Icons.sys.mjs", "Motion.sys.mjs", "Workspaces.sys.mjs", "StartChild.sys.mjs", "StartParent.sys.mjs", "Toolbar.sys.mjs", "Commands.sys.mjs", "Projects.sys.mjs")
 
 

@@ -4,7 +4,7 @@
 import { icon } from "./Icons.sys.mjs";
 import { toolbarButton } from "./Toolbar.sys.mjs";
 import { restoreDialogFocus } from "./Keyboard.sys.mjs";
-import { createStrings } from "./Localization.sys.mjs";
+import { createStrings, formatError } from "./Localization.sys.mjs";
 
 export function initControlCenter(win, { el: createElement, on, cleanup, commands }) {
   const el = (tag, ...args) => createElement(tag === "button" ? "toolbarbutton" : tag, ...args);
@@ -44,7 +44,10 @@ export function initControlCenter(win, { el: createElement, on, cleanup, command
       on(action, "click", async () => {
         runningAction = true;
         hub.close();
-        try { await run(); } catch (error) { win.console.error("Forge control action failed", error); }
+        try { await run(); } catch (error) {
+          win.console.error("Forge control action failed", error);
+          win.alert(formatError(t, error));
+        }
       });
       grid.append(action);
     }
