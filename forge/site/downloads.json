@@ -7,10 +7,28 @@
   "packageSnapshotDate": "2026-10-28",
   "androidCurrentPackageDate": "2026-11-07",
   "sourceCheckpoint": "9ed729458ba9a5746d2bfcc257b1a2dc56c4100d",
+  "androidUpdateChannel": {"url": "updates/android-development.json", "mode": "manual-check-and-OS-confirmed-install", "signing": "RSA-3072/SHA-256 manifest, existing debug APK identity", "bootstrapVersionCode": 2, "supportedABIs": ["arm64-v8a"], "securityUpdateSLA": false},
   "iosTestFlight": {"version": "0.1.0", "build": "6", "processingState": "VALID", "internalBuildState": "IN_BETA_TESTING", "externalBuildState": "BETA_APPROVED", "publicLink": "https://testflight.apple.com/join/4hvp4sk8", "publicGroupIncludesBuild": true, "nativeTestsPerLanguage": 67, "uiTestsPerLanguage": 9, "languages": ["ru", "en"], "defaultFilesCancellationTests": 1, "physicalDevicesValidated": false},
   "builds": [
     {
       "target": "android-arm64-v8a-current",
+      "file": "Forge-android-20261107-v2-arm64-v8a-debug.apk",
+      "url": "downloads/Forge-android-20261107-v2-arm64-v8a-debug.apk",
+      "sha256": "87e83a323b662754e751acbda0e7e0f0a7ae2824bf21eb6613dc8102bf1932ce",
+      "bytes": 198948829,
+      "sourceCommit": "49d0031726f33faebc0f77ce6137e3dca06d2f00",
+      "sourceManifestSha256": "9abdaf5b53598fbf1ee76cd05419fb2a32b8a49f6811382a417d237305d7dc89",
+      "engine": "GeckoView 159.0.20261022150525",
+      "signing": "Development debug identity; not a stable production signing channel",
+      "certificateSha256": "4faadf5155d5d72c0b48b19139da9b4c9a2dabc4111374cf3c6acdee3cbf942d",
+      "versionCode": 2,
+      "versionName": "0.1.0-dev.2",
+      "nativeTests": 66,
+      "unitTests": 55,
+      "runtimeValidation": "Isolated ARM64/API35 emulator; physical devices unverified. First install is manual; later checks use a signed expiring feed and Android installer confirmation. No maintained security-update SLA."
+    },
+    {
+      "target": "android-arm64-v8a-20261107-v1",
       "file": "Forge-android-20261107-arm64-v8a-debug.apk",
       "url": "downloads/Forge-android-20261107-arm64-v8a-debug.apk",
       "sha256": "ff2350deef8ff8bdebd378a742720eb6fed744df93a03202776afdd62c7ad250",

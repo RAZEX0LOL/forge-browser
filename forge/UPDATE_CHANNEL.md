@@ -67,6 +67,24 @@ This is a manually operated development channel, not a maintained security-updat
 SLA. Stable signing migration, key rotation/recovery and physical-device behavior
 remain release gates. Installed v1 builds cannot discover updates by themselves.
 
+### First published bootstrap and evidence
+
+`https://razex.shop/forge/downloads/Forge-android-20261107-v2-arm64-v8a-debug.apk`
+is versionCode 2 (`0.1.0-dev.2`), 198,948,829 bytes, SHA-256
+`87e83a323b662754e751acbda0e7e0f0a7ae2824bf21eb6613dc8102bf1932ce`.
+Source: `49d0031726f33faebc0f77ce6137e3dca06d2f00` (frozen Android inputs).
+Sequence 1 expires **2026-11-20 19:33:43 UTC**; sign a higher sequence before
+expiry. Private manifest key stays on the maintainer machine, not the server.
+
+55 unit/66 native tests passed, lint only OldTargetApi. A full-system API35
+emulator used an explicitly test-only lower-version seed, fetched the signed feed,
+downloaded the published APK and confirmed the real OS installer (1 → 2).
+Synthetic canary and regular session bytes stayed identical. Current-version
+checking passed afterward; the source permission was disabled via Settings.
+The exact updater-installed APK passed another 66 native tests. ATD lacked the
+required Settings activity; its failed run and host-selector/foreground failures
+are retained, not counted as install passes. No physical-device acceptance.
+
 ## Other platforms
 
 iOS stays on Apple's TestFlight update mechanism. It must not download/install

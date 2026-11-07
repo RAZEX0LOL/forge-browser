@@ -52,7 +52,7 @@ public final class BrowserActivityTest {
                         received.countDown();
                     }
                 });
-                view.getSession().loadUri("https://razex.shop/forge/SHA256SUMS");
+                view.getSession().loadUri("https://razex.shop/forge/updates/download-regression-checksums-20261107-v3.bin");
             });
             assertTrue("Native HTTPS download response timed out", received.await(120, TimeUnit.SECONDS));
             assertNull(failure.get(), failure.get());
@@ -66,7 +66,7 @@ public final class BrowserActivityTest {
             try (java.io.InputStream input = response.body) {
                 DownloadPolicy.copy(input, bytes, -1, () -> false, count -> {});
             }
-            // Exact published November manifest; October had 1266 bytes.
+            // Immutable November HTTPS fixture, not the changing release checksum list.
             assertEquals(1375, bytes.size());
             assertEquals("21486630d569d9887c7df066dfd85a6a1b1ccbdf5ec2d6f513d77baa6e50fc1f",
                 UpdatePolicy.hex(java.security.MessageDigest.getInstance("SHA-256").digest(bytes.toByteArray())));

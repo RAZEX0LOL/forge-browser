@@ -57,13 +57,19 @@ Keep backups and pre-existing files; do not delete unrelated server content.
 
 ## Current deployment — 2026-11-07
 
-Release `20261107-landing-v3` is active; `20261028-landing-v2` is retained.
+Release `20261107-updates-landing-v5` is active; earlier releases remain retained.
 Ten static files were byte-verified over HTTPS after the atomic symlink swap.
-Three local downloads passed full server-side hashes and HTTP HEAD/range checks;
+Four local downloads passed full server-side hashes and HTTP HEAD checks;
 the root and both Matrix discovery responses stayed unchanged. No nginx config
 change or reload was needed. Existing unrelated IPv6 nginx warning remains.
 
-Android ARM64 uses a new immutable filename, debug signing and versionCode 1;
+Android ARM64 uses a new immutable v2 filename, existing debug signing and
+versionCode 2, with a manually operated signed update channel. Previous v1 bytes
+remain unchanged. First v2 install is manual; later checks: Menu → Forge updates.
+`updates/` points to the shared signed channel directory; never deploy the signing
+key. See `../UPDATE_CHANNEL.md` for expiry, renewal and acceptance. The immutable
+`.bin` fixture preserves native HTTPS regression checks independently of changing
+release metadata. The preview passed a 390-pixel layout check without overflow;
 desktop and legacy mobile packages remain historical October snapshots.
 TestFlight 0.1.0 (6) is VALID/BETA_APPROVED and assigned to the enabled public group:
 https://testflight.apple.com/join/4hvp4sk8. Status is dated and manually updated.

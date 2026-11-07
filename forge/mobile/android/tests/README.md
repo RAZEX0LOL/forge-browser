@@ -1,5 +1,31 @@
 # Host-driven Android checks
 
+## Server update acceptance
+
+`update_flow.py` targets only `emulator-5588`, AVD `ForgeUpdatesFlow20261107`.
+Use a fresh full API35 Google APIs ARM64 image: Google ATD omits the unknown-app
+source settings activity and cannot establish installer acceptance. Do not grant
+installation via appops/root to turn this missing UI into a pass.
+
+The seed is an explicitly test-only versionCode-1 build of the updater sources,
+with only versionCode/versionName changed. It is not the original public v1 and
+must never be distributed. `bootstrap` checks the genuinely absent public feed
+before first deployment; `prepare` seeds a new full-system AVD after that negative
+control has already been recorded. `install` enables the source permission in
+real Settings UI, downloads the signed public artifact through the app, verifies
+the app's separate confirmation and the real Android installer Update button,
+then asserts installed versionCode 2 and byte-identical synthetic/regular data.
+Never apply this driver to a physical device or personal AVD.
+
+Failed selectors, ATD settings resolution, UI hierarchies and initial runtime
+startup evidence remain in private staging. Compose Settings exports a checkable
+`android.view.View`, not necessarily `android.widget.Switch`; the driver checks
+OS title, checkability and before/after checked state instead of guessing a class.
+
+The HTTPS download regression uses an immutable November `.bin` checksum fixture,
+checking both 1375 bytes and its exact SHA-256. It must not depend on the mutable
+current `SHA256SUMS`, whose bytes necessarily change when a new APK is published.
+
 ## Current upload-form driver
 
 `upload_form.py` drives real native UI on the separately owned

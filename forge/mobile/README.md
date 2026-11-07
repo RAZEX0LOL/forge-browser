@@ -4,6 +4,13 @@ See [SOURCE_CHECKPOINT.md](SOURCE_CHECKPOINT.md) for the 2026-11-07 validation a
 distribution scope. Public TestFlight 0.1.0 (6) and a new Android ARM64 debug APK
 are linked at https://razex.shop/forge/. Older packages remain unchanged.
 
+Android ARM64 now has a separately named versionCode-2 bootstrap with manual
+signed updates from razex.shop. Install it once over the matching debug-signed
+v1, then use Menu → Forge updates. OS installation always requires consent;
+this is not a production signing channel or a security-update SLA. See
+[UPDATE_CHANNEL.md](../UPDATE_CHANNEL.md) for verification, expiry and evidence.
+iOS updates remain through TestFlight, never server-installed App Store IPAs.
+
 These are **new, minimal mobile applications**, not a port of the desktop XUL
 interface, not Firefox/Fenix with a changed name, and not stable browsers.
 

@@ -41,17 +41,30 @@ the obsolete October length rather than removing the assertion. The earlier
 permission-allowlist source failure was addressed with the exact expanded list
 and non-exported/read-grant provider assertions. Source checks: 111 Python/56 JS.
 
-The signed sequence-1 feed and immutable v2 ARM64 APK are published for acceptance
-testing; website promotion and successful OS-install flow are not yet claimed.
+The signed sequence-1 feed and immutable v2 ARM64 APK are published; the main
+website offers v2 and preserves the previous APK under its original name.
 A lower-version updater-enabled **test-only** seed rejected the genuinely absent
 feed before publication and retained versionCode 1. The initial host selector
 failure is retained. ATD cannot resolve MANAGE_UNKNOWN_APP_SOURCES; no appops/root
-bypass was used. Full-system emulator validation is being prepared separately.
+bypass was used. Full-system API35 Google APIs validation subsequently passed the
+real updater flow: signed public feed, actual HTTPS APK download, explicit OS
+Settings permission, app confirmation and real Android installer Update.
+VersionCode increased 1 → 2; synthetic canary and regular session hashes stayed
+identical. This seed is test-only, not the original public v1. Acceptance is in
+`forge-updates-20261107-flow-v2/install-v2`. A separate current-version check passed
+and the install-source permission was disabled again via Settings. Earlier ATD,
+selector, transport startup and post-installer foreground failures are retained.
+
+`forge-updates-20261108-android-tests-v2` then passed all 66 native tests on the
+exact APK installed by that updater. The only test-source delta pins the HTTPS
+download fixture to immutable `.bin` bytes (same 1375-byte/hash assertion), so
+future release checksum changes cannot break it. No APK rebuild or replacement
+for this test delta, and no physical-device acceptance claim.
 See `../UPDATE_CHANNEL.md` for trust, expiry, rollback protection and bootstrap.
 
 | Scope | Latest completed evidence |
 | --- | --- |
-| Source checks | Node 56/56; Python 108/108; Python compilation and diff whitespace checks passed |
+| Source checks | Node 56/56; Python 111/111; Python compilation and diff whitespace checks passed |
 | iOS build-6 sources | Native 67/67 per language and UI 9/9 per language, 152 executions; separate same-binary Files cancellation 1/1 |
 | Android previous stage-4a snapshot | Native 41/41, unit 27/27; lint only OldTargetApi |
 | Android current OS-link-entry delta | Native 49/49, unit 31/31, plus separate startup controls 2/2; lint only OldTargetApi. Earlier failures remain preserved |

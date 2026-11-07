@@ -98,10 +98,11 @@ def main():
         assert driver.version() == 1
         # Use the real OS permission UI, not appops/root or an installer bypass.
         driver.adb('shell', 'am', 'start', '-W', '-a', 'android.settings.MANAGE_UNKNOWN_APP_SOURCES', '-d', 'package:' + PACKAGE)
-        switch = driver.wait('os-install-source-setting', lambda node: node.get('class') == 'android.widget.Switch')
+        driver.text('os-setting-title', 'Install unknown apps')
+        switch = driver.wait('os-install-source-setting', lambda node: node.get('checkable') == 'true')
         assert switch.get('checked') == 'false', 'Permission must start denied'
         driver.tap(switch)
-        driver.wait('os-install-source-enabled', lambda node: node.get('class') == 'android.widget.Switch' and node.get('checked') == 'true')
+        driver.wait('os-install-source-enabled', lambda node: node.get('checkable') == 'true' and node.get('checked') == 'true')
         driver.adb('shell', 'am', 'start', '-W', '-n', PACKAGE + '/org.forgebrowser.mobile.BrowserActivity')
         # Dismiss the preserved missing-feed message from bootstrap if present.
         tree = driver.hierarchy('initial-app')
@@ -115,7 +116,7 @@ def main():
         install = driver.text('os-installer-consent', 'Update', 'Обновить', timeout=60)
         assert install.get('package') != PACKAGE, 'Must be the real OS installer'
         driver.tap(install)
-        driver.text('os-install-complete', 'Done', 'Готово', timeout=120)
+        driver.tap(driver.text('os-install-complete', 'Done', 'Готово', timeout=120))
         assert driver.version() == 2
         after = driver.snapshot()
         assert before and before == after, (before, after)

@@ -7,6 +7,32 @@ the redesigned iPhone interface and later privacy work are not in that build.
 
 ## Cross-platform daily-use gates (2026-11-01)
 
+### Android signed server updates (2026-11-07/08)
+
+The owner requested updates through razex.shop, selecting Android first, then
+desktop full-package updates rather than disabling/replacing Mozilla MAR checks.
+Android bootstrap v2 preserves the package ID/debug certificate and raises
+versionCode to 2. It manually fetches an RSA-3072/SHA-256 signed, expiring,
+monotonic feed, restricts APK URLs to the server, verifies streamed size/hash and
+installed/archive package/version/certificate, and opens the OS installer only
+after consent. No schedule, cookies/history upload, root or silent installation.
+
+Frozen v2: source `49d0031726f33faebc0f77ce6137e3dca06d2f00`, SHA-256
+`87e83a323b662754e751acbda0e7e0f0a7ae2824bf21eb6613dc8102bf1932ce`,
+198,948,829 bytes. 55 unit/66 native tests passed; only existing OldTargetApi lint.
+The full-system API35 flow installed the real public v2 via updater/OS installer
+from a test-only lower-version seed, preserving synthetic canary and regular
+session bytes. Current-version checking passed and source-install permission was
+disabled again via Settings. An immutable HTTPS-fixture test delta then passed
+all 66 native tests on the exact same updater-installed APK. Earlier ATD missing-
+activity, selectors, startup and foreground failures remain preserved.
+
+Site `20261107-updates-landing-v5` offers v2 and all earlier files; root/Matrix
+routes unchanged. Sequence 1 expires 2026-11-20; renewal is explicit offline
+signing, not an unattended security-update SLA. Desktop full-package helper is
+a separate in-progress stage; historical desktop downloads have no new updater.
+iOS remains TestFlight.
+
 ### New release/site authorization and build-6 QA (2026-11-07)
 
 The owner explicitly authorized all source pushes, a new TestFlight release and

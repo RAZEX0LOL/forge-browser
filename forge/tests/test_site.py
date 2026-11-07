@@ -42,8 +42,8 @@ class SiteTests(unittest.TestCase):
         manifest = json.loads((SITE / 'downloads.json').read_text())
         builds = manifest['builds']
         targets = {b['target']: b for b in builds}
-        self.assertEqual(len(targets), 12)
-        self.assertEqual(len({b['file'] for b in builds}), 12)
+        self.assertEqual(len(targets), 13)
+        self.assertEqual(len({b['file'] for b in builds}), 13)
         links = [attrs for tag, attrs in Page((SITE / 'index.html').read_text()).tags
                  if tag == 'a' and 'data-target' in attrs]
         self.assertEqual({a['data-target'] for a in links}, set(targets))
@@ -66,13 +66,19 @@ class SiteTests(unittest.TestCase):
         legacy = targets['android-arm64-v8a']
         self.assertNotEqual(current['file'], legacy['file'])
         self.assertTrue(current['url'].startswith('downloads/'))
-        self.assertEqual(current['versionCode'], 1)
+        self.assertEqual(current['versionCode'], 2)
         self.assertIn('debug identity', current['signing'])
         self.assertRegex(current['certificateSha256'], r'^[a-f0-9]{64}$')
-        self.assertEqual(current['nativeTests'], 64)
-        self.assertEqual(current['unitTests'], 43)
-        self.assertEqual(current['realUploadCases'], 3)
-        self.assertIn('versionCode 1', (SITE / 'index.html').read_text())
+        self.assertEqual(current['nativeTests'], 66)
+        self.assertEqual(current['unitTests'], 55)
+        previous = targets['android-arm64-v8a-20261107-v1']
+        self.assertEqual(previous['realUploadCases'], 3)
+        self.assertEqual(previous['versionCode'], 1)
+        self.assertNotEqual(current['file'], previous['file'])
+        self.assertEqual(current['certificateSha256'], previous['certificateSha256'])
+        self.assertIn('versionCode 2', (SITE / 'index.html').read_text())
+        self.assertTrue((SITE / manifest['androidUpdateChannel']['url']).is_file())
+        self.assertFalse(manifest['androidUpdateChannel']['securityUpdateSLA'])
         self.assertEqual(manifest['androidCurrentPackageDate'], '2026-11-07')
 
     def test_site_has_no_remote_passive_resources_inline_scripts_or_forms(self):
